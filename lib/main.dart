@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:subtext/core/theme/app_theme.dart';
-import 'package:subtext/ui/main_layout.dart';
+import 'package:subtext/ui/layout/main_layout.dart';
 
 void main() {
   runApp(const ProviderScope(child: SubtextApp()));
