@@ -94,7 +94,7 @@ class MainLayout extends ConsumerWidget {
                   child: _buildNavItem(
                     icon: Icons.home_outlined,
                     selectedIcon: Icons.home,
-                    label: 'Home',
+                    label: '首页',
                     isActive: appState.currentTab == AppTab.home,
                     onTap: () => appStateNotifier.setCurrentTab(AppTab.home),
                   ),
@@ -105,7 +105,7 @@ class MainLayout extends ConsumerWidget {
                   child: _buildNavItem(
                     icon: Icons.library_books_outlined,
                     selectedIcon: Icons.library_books,
-                    label: 'Arsenal',
+                    label: '武器库',
                     isActive: appState.currentTab == AppTab.arsenal,
                     onTap: () => appStateNotifier.setCurrentTab(AppTab.arsenal),
                   ),
@@ -119,7 +119,7 @@ class MainLayout extends ConsumerWidget {
                   child: _buildNavItem(
                     icon: Icons.people_outline,
                     selectedIcon: Icons.people,
-                    label: 'Agents',
+                    label: '智能助手',
                     isActive: appState.currentTab == AppTab.agents,
                     onTap: () => appStateNotifier.setCurrentTab(AppTab.agents),
                   ),
@@ -130,7 +130,7 @@ class MainLayout extends ConsumerWidget {
                   child: _buildNavItem(
                     icon: Icons.person_outline,
                     selectedIcon: Icons.person,
-                    label: 'Me',
+                    label: '我的',
                     isActive: appState.currentTab == AppTab.me,
                     onTap: () => appStateNotifier.setCurrentTab(AppTab.me),
                   ),

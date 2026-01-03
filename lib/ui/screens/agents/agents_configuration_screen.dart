@@ -30,8 +30,8 @@ class AgentsConfigurationScreen extends StatelessWidget {
             Column(
               children: [
                 _buildAgentCard(
-                  title: 'The Strategist',
-                  subtitle: 'Core Agent',
+                  title: '战略家',
+                  subtitle: '核心智能助手',
                   description: '分析利益冲突，提供博弈论视角的回复建议。',
                   isActive: true,
                   icon: Icons.trending_up,
@@ -40,8 +40,8 @@ class AgentsConfigurationScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _buildAgentCard(
-                  title: 'Empathizer',
-                  subtitle: 'Psychology',
+                  title: '共情者',
+                  subtitle: '心理学',
                   description: '分析情感潜台词，识别微情绪变化。',
                   isActive: false,
                   icon: Icons.psychology,
@@ -166,7 +166,7 @@ class _AgentsHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Configuration',
+          '配置',
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
@@ -176,7 +176,7 @@ class _AgentsHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'My Agents',
+          '我的智能助手',
           style: GoogleFonts.playfairDisplay(
             fontSize: 24,
             fontWeight: FontWeight.w900,

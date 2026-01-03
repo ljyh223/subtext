@@ -39,7 +39,7 @@ class MeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Personal Center',
+          '个人中心',
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
@@ -49,7 +49,7 @@ class MeScreen extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Me',
+          '我的',
           style: GoogleFonts.playfairDisplay(
             fontSize: 32,
             fontWeight: FontWeight.w900,
@@ -79,7 +79,7 @@ class MeScreen extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                'M',
+                '李',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 32,
                   fontWeight: FontWeight.w900,
@@ -95,7 +95,7 @@ class MeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mei Li',
+                  '李梅',
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -115,9 +115,9 @@ class MeScreen extends StatelessWidget {
                 // Stats
                 Row(
                   children: [
-                    _buildStatItem('23', 'Analyses'),
+                    _buildStatItem('23', '分析次数'),
                     const SizedBox(width: 32),
-                    _buildStatItem('82', 'Social Score'),
+                    _buildStatItem('82', '社交评分'),
                   ],
                 ),
               ],
@@ -158,7 +158,7 @@ class MeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick Stats',
+          '快速统计',
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -175,12 +175,12 @@ class MeScreen extends StatelessWidget {
           crossAxisSpacing: 16,
           childAspectRatio: 1.2,
           children: [
-            _buildStatCard('23', 'Analyses', Icons.analytics_outlined),
-            _buildStatCard('82', 'Social Score', Icons.person_add_outlined),
-            _buildStatCard('15', 'Sessions', Icons.timer_outlined),
-            _buildStatCard('94%', 'Accuracy', Icons.check_circle_outline),
-            _buildStatCard('5', 'Strategies', Icons.library_books_outlined),
-            _buildStatCard('12', 'Agents', Icons.people_outlined),
+            _buildStatCard('23', '分析次数', Icons.analytics_outlined),
+            _buildStatCard('82', '社交评分', Icons.person_add_outlined),
+            _buildStatCard('15', '会话次数', Icons.timer_outlined),
+            _buildStatCard('94%', '准确率', Icons.check_circle_outline),
+            _buildStatCard('5', '策略数量', Icons.library_books_outlined),
+            _buildStatCard('12', '智能助手', Icons.people_outlined),
           ],
         ),
       ],
@@ -229,7 +229,7 @@ class MeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Settings',
+          '设置',
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -250,49 +250,49 @@ class MeScreen extends StatelessWidget {
               _buildSettingItem(
                 context: context,
                 icon: Icons.privacy_tip_outlined,
-                title: 'Privacy & Security',
+                title: '隐私与安全',
                 onTap: () {},
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.notifications_outlined,
-                title: 'Notifications',
+                title: '通知设置',
                 onTap: () {},
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.palette_outlined,
-                title: 'Appearance',
+                title: '外观设置',
                 onTap: () {},
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.language_outlined,
-                title: 'Language',
+                title: '语言设置',
                 onTap: () {},
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.help_outline,
-                title: 'Help & Support',
+                title: '帮助与支持',
                 onTap: () {},
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.info_outline,
-                title: 'About',
+                title: '关于',
                 onTap: () {},
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.developer_mode_outlined,
-                title: 'API Test',
+                title: 'API测试',
                 onTap: () {
                   Navigator.push(
                     context,
@@ -309,7 +309,7 @@ class MeScreen extends StatelessWidget {
 
         // Account Actions
         Text(
-          'Account Actions',
+          '账户操作',
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -329,14 +329,14 @@ class MeScreen extends StatelessWidget {
               _buildSettingItem(
                 context: context,
                 icon: Icons.switch_account_outlined,
-                title: 'Switch Account',
+                title: '切换账户',
                 onTap: () {},
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.logout_outlined,
-                title: 'Logout',
+                title: '退出登录',
                 titleColor: AppTheme.burntOrange,
                 onTap: () {},
               ),
@@ -399,7 +399,7 @@ class MeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'About',
+          '关于',
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -427,7 +427,7 @@ class MeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Version 1.0.0',
+                '版本 1.0.0',
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
@@ -436,7 +436,7 @@ class MeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Subtext is your AI-powered communication assistant, helping you analyze and improve your social interactions.',
+                'Subtext是您的AI驱动的沟通助手，帮助您分析和改善社交互动。',
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -456,7 +456,7 @@ class MeScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Swiss Design',
+                    '瑞士设计',
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,

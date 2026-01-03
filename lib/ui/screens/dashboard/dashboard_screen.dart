@@ -56,7 +56,7 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Social Battery',
+                '社交电量',
                 style: GoogleFonts.inter(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
@@ -111,7 +111,7 @@ class DashboardScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Insights',
+          '最近洞察',
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
@@ -123,15 +123,11 @@ class DashboardScreen extends StatelessWidget {
         const Divider(color: AppTheme.black, thickness: 1),
         const SizedBox(height: 16),
         // Insight items
-        _buildInsightItem(
-          1,
-          'Project Delay Negotiation',
-          'Defensive | Passive',
-        ),
+        _buildInsightItem(1, '项目延期谈判', '防御性 | 被动'),
         const SizedBox(height: 12),
-        _buildInsightItem(2, 'Team Feedback Session', 'Collaborative | Open'),
+        _buildInsightItem(2, '团队反馈会议', '协作性 | 开放'),
         const SizedBox(height: 12),
-        _buildInsightItem(3, 'Client Proposal Review', 'Assertive | Clear'),
+        _buildInsightItem(3, '客户提案评审', '果断 | 清晰'),
       ],
     );
   }
@@ -175,7 +171,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Detected: $tags',
+                  '检测到: $tags',
                   style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
@@ -200,7 +196,7 @@ class _DashboardHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Friday, Jan 2',
+          '星期五, 1月2日',
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
@@ -210,7 +206,7 @@ class _DashboardHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Dashboard',
+          '仪表盘',
           style: GoogleFonts.playfairDisplay(
             fontSize: 24,
             fontWeight: FontWeight.w900,

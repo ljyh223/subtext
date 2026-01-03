@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
 import 'package:subtext/data/models/chat_message.dart';
 import 'package:subtext/data/models/file_upload_response.dart';
-import 'package:subtext/data/repositories/chat_repository.dart';
 import 'package:subtext/providers/app_state_provider.dart';
 import 'package:subtext/providers/chat_provider.dart';
 
@@ -99,7 +98,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Upload Chat',
+                          '上传聊天',
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
@@ -128,7 +127,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
           if (_isUploading) const SizedBox(height: 32),
           if (_isUploading)
             Text(
-              'Uploading Image...',
+              '正在上传图片...',
               style: GoogleFonts.inter(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
@@ -138,7 +137,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
           if (_isAnalyzing) const SizedBox(height: 32),
           if (_isAnalyzing)
             Text(
-              'Analyzing Chat...',
+              '正在分析聊天...',
               style: GoogleFonts.inter(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
@@ -181,7 +180,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                       ),
                       color: AppTheme.burntOrange,
                       child: Text(
-                        'Uploaded Image',
+                        '已上传图片',
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
@@ -202,7 +201,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
               children: [
                 if (_analysisResult.isNotEmpty)
                   Text(
-                    'Analysis Result',
+                    '分析结果',
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 32,
                       fontWeight: FontWeight.w900,
@@ -231,7 +230,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                             : () => _uploadImageAndAnalyze(),
                         icon: const Icon(Icons.upload_file, size: 14),
                         label: Text(
-                          'Analyze Chat',
+                          '分析聊天',
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
@@ -257,7 +256,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                           : () => _resetAnalysis(),
                       icon: const Icon(Icons.refresh, size: 14),
                       label: Text(
-                        'New Analysis',
+                        '重新分析',
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
@@ -295,7 +294,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Recommended',
+                          '推荐',
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
@@ -323,7 +322,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                               size: 14,
                             ),
                             label: Text(
-                              'Simulate Reply',
+                              '模拟回复',
                               style: GoogleFonts.inter(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
@@ -389,7 +388,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Simulation Mode',
+                            '模拟模式',
                             style: GoogleFonts.inter(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
@@ -543,7 +542,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Type your reply to practice...',
+                              '输入您的回复进行练习...',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: AppTheme.stone400,
@@ -671,7 +670,7 @@ class _ScannerHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Analysis',
+            '分析',
             style: GoogleFonts.inter(
               fontSize: 10,
               fontWeight: FontWeight.w700,
@@ -681,7 +680,7 @@ class _ScannerHeader extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Scanner',
+            '扫描器',
             style: GoogleFonts.playfairDisplay(
               fontSize: 24,
               fontWeight: FontWeight.w900,

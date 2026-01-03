@@ -39,7 +39,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
 
     setState(() {
       _isUploading = true;
-      _uploadResult = 'Uploading...';
+      _uploadResult = '正在上传...';
     });
 
     try {
@@ -52,14 +52,14 @@ class _TestScreenState extends ConsumerState<TestScreen> {
       setState(() {
         if (response.code == 0 && response.data != null) {
           _uploadResult =
-              'Upload successful!\nFile ID: ${response.data!.id}\nFile Name: ${response.data!.fileName}\nSize: ${response.data!.bytes} bytes';
+              '上传成功!\n文件ID: ${response.data!.id}\n文件名: ${response.data!.fileName}\n大小: ${response.data!.bytes} 字节';
         } else {
-          _uploadResult = 'Upload failed: ${response.msg}';
+          _uploadResult = '上传失败: ${response.msg}';
         }
       });
     } catch (e) {
       setState(() {
-        _uploadResult = 'Error: $e';
+        _uploadResult = '错误: $e';
       });
     } finally {
       setState(() {
@@ -79,7 +79,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
         backgroundColor: AppTheme.paperWhite,
         surfaceTintColor: Colors.transparent,
         title: Text(
-          'API Test',
+          'API测试',
           style: GoogleFonts.playfairDisplay(
             fontSize: 20,
             fontWeight: FontWeight.w900,
@@ -99,7 +99,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
             children: [
               // 测试标题
               Text(
-                'API Testing',
+                'API测试',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 32,
                   fontWeight: FontWeight.w900,
@@ -126,7 +126,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Image Upload Test',
+          '图片上传测试',
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -165,7 +165,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
               ElevatedButton.icon(
                 onPressed: _pickImage,
                 icon: const Icon(Icons.image_outlined),
-                label: const Text('Select Image'),
+                label: const Text('选择图片'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.black,
                   foregroundColor: AppTheme.white,
@@ -186,7 +186,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                     ? _uploadImage
                     : null,
                 icon: const Icon(Icons.upload_outlined),
-                label: const Text('Upload Image'),
+                label: const Text('上传图片'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.burntOrange,
                   foregroundColor: AppTheme.white,
@@ -231,7 +231,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Streaming Chat Test',
+          '流式聊天测试',
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
@@ -310,7 +310,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                       child: TextField(
                         controller: _textController,
                         decoration: InputDecoration(
-                          hintText: 'Type your message...',
+                          hintText: '输入您的消息...',
                           hintStyle: GoogleFonts.inter(
                             fontSize: 14,
                             color: AppTheme.stone400,
@@ -360,7 +360,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                         }
                       },
                       icon: const Icon(Icons.send_outlined),
-                      label: const Text('Send'),
+                      label: const Text('发送'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.black,
                         foregroundColor: AppTheme.white,

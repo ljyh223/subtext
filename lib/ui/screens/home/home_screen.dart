@@ -46,7 +46,7 @@ class HomeScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Friday, Jan 2',
+          '星期五, 1月2日',
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
@@ -56,7 +56,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Dashboard',
+          '仪表盘',
           style: GoogleFonts.playfairDisplay(
             fontSize: 32,
             fontWeight: FontWeight.w900,
@@ -89,7 +89,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             child: Text(
-              'Overview',
+              '概览',
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -116,7 +116,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             child: Text(
-              'Network Graph',
+              '网络图谱',
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -172,7 +172,7 @@ class HomeScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Social Battery',
+                '社交电量',
                 style: GoogleFonts.inter(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
@@ -227,7 +227,7 @@ class HomeScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent Insights',
+          '最近洞察',
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
@@ -239,15 +239,11 @@ class HomeScreen extends ConsumerWidget {
         const Divider(color: AppTheme.black, thickness: 1),
         const SizedBox(height: 16),
         // Insight items
-        _buildInsightItem(
-          1,
-          'Project Delay Negotiation',
-          'Defensive | Passive',
-        ),
+        _buildInsightItem(1, '项目延期谈判', '防御性 | 被动'),
         const SizedBox(height: 12),
-        _buildInsightItem(2, 'Team Feedback Session', 'Collaborative | Open'),
+        _buildInsightItem(2, '团队反馈会议', '协作性 | 开放'),
         const SizedBox(height: 12),
-        _buildInsightItem(3, 'Client Proposal Review', 'Assertive | Clear'),
+        _buildInsightItem(3, '客户提案评审', '果断 | 清晰'),
       ],
     );
   }
@@ -291,7 +287,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Detected: $tags',
+                  '检测到: $tags',
                   style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
@@ -338,7 +334,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'Me',
+                    '我',
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -365,7 +361,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'Boss',
+                    '老板',
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -409,7 +405,7 @@ class HomeScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Profile',
+                    '个人资料',
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
@@ -434,7 +430,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Boss',
+                '老板',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -443,7 +439,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Director',
+                '总监',
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -455,11 +451,11 @@ class HomeScreen extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildStatItem('Communication Style', 'Direct | Assertive'),
+                  _buildStatItem('沟通风格', '直接 | 果断'),
                   const SizedBox(height: 12),
-                  _buildStatItem('Sentiment Score', '78%'),
+                  _buildStatItem('情感评分', '78%'),
                   const SizedBox(height: 12),
-                  _buildStatItem('Response Rate', '95%'),
+                  _buildStatItem('回复率', '95%'),
                 ],
               ),
             ],

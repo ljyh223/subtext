@@ -29,7 +29,7 @@ class ArsenalScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Knowledge Base',
+          '知识库',
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
@@ -39,7 +39,7 @@ class ArsenalScreen extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Arsenal',
+          '武器库',
           style: GoogleFonts.playfairDisplay(
             fontSize: 32,
             fontWeight: FontWeight.w900,
@@ -68,22 +68,15 @@ class ArsenalScreen extends StatelessWidget {
   }
 
   Widget _buildArsenalCard(int index) {
-    final titles = [
-      'Strategic Replies',
-      'Emotional Intelligence',
-      'Negotiation Tactics',
-      'Conflict Resolution',
-      'Persuasion Techniques',
-      'Body Language',
-    ];
+    final titles = ['战略回复', '情商', '谈判策略', '冲突解决', '说服技巧', '肢体语言'];
 
     final descriptions = [
-      'High-impact responses for critical situations',
-      'Master emotional dynamics in conversations',
-      'Win-win negotiation strategies',
-      'Turn conflicts into opportunities',
-      'Influence with confidence and empathy',
-      'Decode non-verbal cues effectively',
+      '关键时刻的高影响力回复',
+      '掌握对话中的情绪动态',
+      '双赢谈判策略',
+      '将冲突转化为机会',
+      '充满自信和同理心的影响力',
+      '有效解读非语言线索',
     ];
 
     return Container(
