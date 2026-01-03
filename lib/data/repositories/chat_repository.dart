@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/ai_response.dart';
 import 'package:subtext/data/models/chat_message.dart';
 import 'package:subtext/data/models/file_upload_response.dart';

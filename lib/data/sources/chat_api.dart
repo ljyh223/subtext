@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/ai_response.dart';
 import 'package:subtext/data/models/chat_message.dart';
 
@@ -50,11 +51,16 @@ class ChatApi {
         data['conversation_id'] = conversationId;
       }
 
+      Logger.d('ChatApi', 'Sending chat message to /v3/chat');
+      Logger.d('ChatApi', 'Request data: $data');
+
       final response = await _dio.post(
         '/v3/chat',
         data: data,
         options: Options(responseType: ResponseType.stream),
       );
+
+      Logger.i('ChatApi', 'Received response for /v3/chat');
 
       // 处理流式响应
       if (stream) {
@@ -84,12 +90,17 @@ class ChatApi {
                 // 处理结束事件
                 if (jsonString == '[DONE]' ||
                     (currentEvent == 'done' && jsonString == '"[DONE]"')) {
+                  Logger.d('ChatApi', 'Received stream done event');
                   sink.close();
                   return;
                 }
 
                 try {
                   final json = jsonDecode(jsonString);
+                  Logger.d(
+                    'ChatApi',
+                    'Received event: $currentEvent, data: $json',
+                  );
 
                   // 只处理与消息相关的事件
                   if (currentEvent == 'conversation.message.delta' ||
@@ -98,13 +109,13 @@ class ChatApi {
                     sink.add(aiResponse);
                   }
                 } catch (e) {
-                  // ignore: avoid_print
-                  print('Error parsing AI response: $e');
+                  Logger.e('ChatApi', 'Error parsing AI response: $e');
                 }
               }
             }
           },
           handleError: (error, stackTrace, sink) {
+            Logger.e('ChatApi', 'Stream error: $error', error, stackTrace);
             sink.addError(error);
           },
         );
@@ -117,6 +128,7 @@ class ChatApi {
         yield aiResponse;
       }
     } catch (e) {
+      Logger.e('ChatApi', 'Failed to send chat message: $e', e);
       throw Exception('Failed to send chat message: $e');
     }
   }
@@ -132,6 +144,9 @@ class ChatApi {
     required String fileName,
   }) async {
     try {
+      Logger.d('ChatApi', 'Uploading file: $fileName');
+      Logger.d('ChatApi', 'File path: $filePath');
+
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(filePath, filename: fileName),
       });
@@ -142,8 +157,12 @@ class ChatApi {
         options: Options(headers: {'Content-Type': 'multipart/form-data'}),
       );
 
+      Logger.i('ChatApi', 'File upload successful');
+      Logger.d('ChatApi', 'Upload response: ${response.data}');
+
       return response.data;
     } catch (e) {
+      Logger.e('ChatApi', 'Failed to upload file: $e', e);
       throw Exception('Failed to upload file: $e');
     }
   }
