@@ -6,7 +6,7 @@ part 'chat_message.g.dart';
 @freezed
 class ChatMessage with _$ChatMessage {
   const factory ChatMessage({
-    required dynamic content,
+    required String content,
     @JsonKey(name: 'content_type') required String contentType,
     required String role,
     required String type,

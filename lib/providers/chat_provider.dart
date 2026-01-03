@@ -8,7 +8,7 @@ import 'package:subtext/data/sources/chat_api.dart';
 
 // API Token Provider (replace with your actual token or a secure way to get it)
 const String _apiToken =
-    'cztei_l46Gbbbn264Ymbm20XQJxWNFlB35TnBZwCHC7TMrHHMuUjOfrUR8JCphYLVut1cGm';
+    'pat_DDaWdIFUY0yqsLJzUc3DZvnA3ZTqhdJcR65mUKeMerjS11J4wnRfhiIJUSIzJrva';
 
 // Chat API Provider
 final chatApiProvider = Provider<ChatApi>((ref) {

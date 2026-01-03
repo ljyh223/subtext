@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:subtext/core/utils/logger.dart';
@@ -52,7 +53,7 @@ class ChatApi {
       }
 
       Logger.d('ChatApi', 'Sending chat message to /v3/chat');
-      Logger.d('ChatApi', 'Request data: $data');
+      Logger.d('ChatApi', 'Request data: ${jsonEncode(data)}');
 
       final response = await _dio.post(
         '/v3/chat',
@@ -64,61 +65,63 @@ class ChatApi {
 
       // 处理流式响应
       if (stream) {
-        final streamTransformer = StreamTransformer.fromHandlers(
-          handleData: (data, sink) {
-            // 解析SSE格式的响应
-            final listData = data as List<int>;
-            final decoded = utf8.decode(listData);
-            final lines = decoded.split('\n');
+        // 显式指定StreamTransformer的泛型类型为Uint8List和AIResponse
+        final StreamTransformer<Uint8List, AIResponse> streamTransformer =
+            StreamTransformer.fromHandlers(
+              handleData: (data, sink) {
+                // 解析SSE格式的响应
+                final listData = data as List<int>;
+                final decoded = utf8.decode(listData);
+                final lines = decoded.split('\n');
 
-            // 临时存储当前事件类型
-            String? currentEvent;
+                // 临时存储当前事件类型
+                String? currentEvent;
 
-            for (final line in lines) {
-              if (line.trim().isEmpty) continue;
+                for (final line in lines) {
+                  if (line.trim().isEmpty) continue;
 
-              // 解析事件类型
-              if (line.startsWith('event:')) {
-                currentEvent = line.substring(6).trim();
-                continue;
-              }
-
-              // 解析数据
-              if (line.startsWith('data:')) {
-                final jsonString = line.substring(5).trim();
-
-                // 处理结束事件
-                if (jsonString == '[DONE]' ||
-                    (currentEvent == 'done' && jsonString == '"[DONE]"')) {
-                  Logger.d('ChatApi', 'Received stream done event');
-                  sink.close();
-                  return;
-                }
-
-                try {
-                  final json = jsonDecode(jsonString);
-                  Logger.d(
-                    'ChatApi',
-                    'Received event: $currentEvent, data: $json',
-                  );
-
-                  // 只处理与消息相关的事件
-                  if (currentEvent == 'conversation.message.delta' ||
-                      currentEvent == 'conversation.message.completed') {
-                    final aiResponse = AIResponse.fromJson(json);
-                    sink.add(aiResponse);
+                  // 解析事件类型
+                  if (line.startsWith('event:')) {
+                    currentEvent = line.substring(6).trim();
+                    continue;
                   }
-                } catch (e) {
-                  Logger.e('ChatApi', 'Error parsing AI response: $e');
+
+                  // 解析数据
+                  if (line.startsWith('data:')) {
+                    final jsonString = line.substring(5).trim();
+
+                    // 处理结束事件
+                    if (jsonString == '[DONE]' ||
+                        (currentEvent == 'done' && jsonString == '"[DONE]"')) {
+                      Logger.d('ChatApi', 'Received stream done event');
+                      sink.close();
+                      return;
+                    }
+
+                    try {
+                      final json = jsonDecode(jsonString);
+                      Logger.d(
+                        'ChatApi',
+                        'Received event: $currentEvent, data: $json',
+                      );
+
+                      // 只处理与消息相关的事件
+                      if (currentEvent == 'conversation.message.delta' ||
+                          currentEvent == 'conversation.message.completed') {
+                        final aiResponse = AIResponse.fromJson(json);
+                        sink.add(aiResponse);
+                      }
+                    } catch (e) {
+                      Logger.e('ChatApi', 'Error parsing AI response: $e');
+                    }
+                  }
                 }
-              }
-            }
-          },
-          handleError: (error, stackTrace, sink) {
-            Logger.e('ChatApi', 'Stream error: $error', error, stackTrace);
-            sink.addError(error);
-          },
-        );
+              },
+              handleError: (error, stackTrace, sink) {
+                Logger.e('ChatApi', 'Stream error: $error', error, stackTrace);
+                sink.addError(error);
+              },
+            );
 
         final stream = response.data.stream.transform(streamTransformer);
         yield* stream;

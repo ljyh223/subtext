@@ -629,7 +629,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
     // Send message and listen to stream
     final stream = chatRepository.sendChatMessage(
       botId: '7590746062667972648',
-      userId: '123456789',
+      userId: '4132430370061324',
       messages: [message],
       stream: true,
     );
