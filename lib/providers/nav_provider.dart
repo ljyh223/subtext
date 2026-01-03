@@ -1,25 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum AppTab {
-  home,
-  arsenal,
-  scan,
-  agents,
-  me
-}
+enum AppTab { home, arsenal, scan, agents, me }
 
-enum HomeView {
-  overview,
-  graph,
-}
+enum HomeView { overview, graph }
 
-enum AnalysisState {
-  empty,
-  analyzing,
-  result,
-  cotLog,
-  simulator,
-}
+enum AnalysisState { empty, analyzing, result, cotLog, simulator }
 
 class AppState {
   final AppTab currentTab;

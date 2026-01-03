@@ -1,10 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum AppTab {
-  home,
-  scan,
-  agents,
-}
+enum AppTab { home, scan, agents }
 
 class AppState {
   final AppTab currentTab;

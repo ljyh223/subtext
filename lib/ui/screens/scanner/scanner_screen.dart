@@ -1,14 +1,34 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
+import 'package:subtext/data/models/chat_message.dart';
+import 'package:subtext/data/models/file_upload_response.dart';
+import 'package:subtext/data/repositories/chat_repository.dart';
 import 'package:subtext/providers/app_state_provider.dart';
+import 'package:subtext/providers/chat_provider.dart';
 
-class ScannerScreen extends ConsumerWidget {
+class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ScannerScreen> createState() => _ScannerScreenState();
+}
+
+class _ScannerScreenState extends ConsumerState<ScannerScreen> {
+  File? _selectedImage;
+  FileUploadResponse? _uploadResponse;
+  String _analysisResult = '';
+  bool _isUploading = false;
+  bool _isAnalyzing = false;
+  final ImagePicker _picker = ImagePicker();
+
+  @override
+  Widget build(BuildContext context) {
     final appState = ref.watch(appStateProvider);
     final appStateNotifier = ref.read(appStateProvider.notifier);
 
@@ -24,44 +44,39 @@ class ScannerScreen extends ConsumerWidget {
                 const _ScannerHeader(),
                 // Content
                 Expanded(
-                  child: appState.hasResult
-                      ? _buildResultsView(context, ref)
-                      : _buildUploadView(appState, appStateNotifier),
+                  child: (_selectedImage != null || _analysisResult.isNotEmpty)
+                      ? _buildResultsView(context, appStateNotifier)
+                      : _buildUploadView(),
                 ),
               ],
             ),
           ),
           // Simulation Modal
-          if (appState.showSim) _buildSimulationModal(context, ref),
+          if (appState.showSim) _buildSimulationModal(context),
         ],
       ),
     );
   }
 
-  Widget _buildUploadView(
-    AppState appState,
-    AppStateNotifier appStateNotifier,
-  ) {
+  Widget _buildUploadView() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: appState.isAnalyzing
-                ? null
-                : () => appStateNotifier.startAnalysis(),
+            onTap: _isUploading || _isAnalyzing ? null : () => _selectImage(),
             child: Container(
               width: 256,
               height: 256,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: appState.isAnalyzing
+                  color: (_isUploading || _isAnalyzing)
                       ? AppTheme.stone300
                       : AppTheme.stone300,
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(128),
-                color: appState.isAnalyzing
+                color: (_isUploading || _isAnalyzing)
                     ? AppTheme.paperWhite
                     : AppTheme.paperWhite,
               ),
@@ -69,7 +84,7 @@ class ScannerScreen extends ConsumerWidget {
                 alignment: Alignment.center,
                 children: [
                   // Upload Icon
-                  if (!appState.isAnalyzing)
+                  if (!_isUploading && !_isAnalyzing)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,7 +110,7 @@ class ScannerScreen extends ConsumerWidget {
                       ],
                     ),
                   // Loading Animation
-                  if (appState.isAnalyzing)
+                  if (_isUploading || _isAnalyzing)
                     const Center(
                       child: SizedBox(
                         width: 256,
@@ -110,10 +125,20 @@ class ScannerScreen extends ConsumerWidget {
               ),
             ),
           ),
-          if (appState.isAnalyzing) const SizedBox(height: 32),
-          if (appState.isAnalyzing)
+          if (_isUploading) const SizedBox(height: 32),
+          if (_isUploading)
             Text(
-              'Running Multi-Agent Workflow...',
+              'Uploading Image...',
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: AppTheme.stone400,
+              ),
+            ),
+          if (_isAnalyzing) const SizedBox(height: 32),
+          if (_isAnalyzing)
+            Text(
+              'Analyzing Chat...',
               style: GoogleFonts.inter(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
@@ -125,163 +150,199 @@ class ScannerScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildResultsView(BuildContext context, WidgetRef ref) {
-    final appStateNotifier = ref.read(appStateProvider.notifier);
-
+  Widget _buildResultsView(
+    BuildContext context,
+    AppStateNotifier appStateNotifier,
+  ) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // Result Image
-          Container(
-            height: 200,
-            width: double.infinity,
-            color: AppTheme.stone200,
-            child: Stack(
-              children: [
-                Image.network(
-                  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=3376&auto=format&fit=crop',
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  color: Colors.black.withOpacity(0.5),
-                  colorBlendMode: BlendMode.color,
-                ),
-                Positioned(
-                  bottom: 16,
-                  left: 24,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    color: AppTheme.burntOrange,
-                    child: Text(
-                      'Analysis Complete',
-                      style: GoogleFonts.inter(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.2,
-                        color: AppTheme.white,
+          // Selected Image
+          if (_selectedImage != null)
+            Container(
+              height: 200,
+              width: double.infinity,
+              color: AppTheme.stone200,
+              child: Stack(
+                children: [
+                  Image.file(
+                    _selectedImage!,
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    bottom: 16,
+                    left: 24,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      color: AppTheme.burntOrange,
+                      child: Text(
+                        'Uploaded Image',
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.2,
+                          color: AppTheme.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Result Content
+          // Analysis Result
           Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '"Deflective"',
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w900,
-                    color: AppTheme.black,
+                if (_analysisResult.isNotEmpty)
+                  Text(
+                    'Analysis Result',
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.black,
+                    ),
                   ),
-                ),
                 const SizedBox(height: 16),
-                Text(
-                  '对方试图通过模糊时间节点来转移话题。建议采用“封闭式提问”锁定结果。',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppTheme.stone400,
+                if (_analysisResult.isNotEmpty)
+                  Text(
+                    _analysisResult,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppTheme.stone400,
+                    ),
                   ),
-                ),
                 const SizedBox(height: 24),
-                // Tabs
+                // Action Buttons
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: AppTheme.black, width: 2),
+                    if (_selectedImage != null && _analysisResult.isEmpty)
+                      ElevatedButton.icon(
+                        onPressed: _isUploading || _isAnalyzing
+                            ? null
+                            : () => _uploadImageAndAnalyze(),
+                        icon: const Icon(Icons.upload_file, size: 14),
+                        label: Text(
+                          'Analyze Chat',
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.1,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.black,
+                          foregroundColor: AppTheme.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                       ),
-                      child: Text(
-                        'Strategy',
+                    const SizedBox(width: 16),
+                    ElevatedButton.icon(
+                      onPressed: _isUploading || _isAnalyzing
+                          ? null
+                          : () => _resetAnalysis(),
+                      icon: const Icon(Icons.refresh, size: 14),
+                      label: Text(
+                        'New Analysis',
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                          color: AppTheme.black,
+                          letterSpacing: 0.1,
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 24),
-                    Text(
-                      'Raw Data',
-                      style: GoogleFonts.inter(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.2,
-                        color: AppTheme.stone400,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.white,
+                        foregroundColor: AppTheme.black,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          side: const BorderSide(
+                            color: AppTheme.black,
+                            width: 1,
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
-                // Strategy Card
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppTheme.stone50,
-                    border: Border.all(color: AppTheme.stone200, width: 1),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Recommended',
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
-                          color: AppTheme.burntOrange,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        '"关于时间节点，我们需要在周三前敲定，否则会影响Q4的整体排期。"',
-                        style: GoogleFonts.playfairDisplay(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.italic,
-                          color: AppTheme.black,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed: () => appStateNotifier.toggleShowSim(),
-                          icon: const Icon(Icons.edit_note_outlined, size: 14),
-                          label: Text(
-                            'Simulate Reply',
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.1,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.black,
-                            foregroundColor: AppTheme.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                if (_analysisResult.isNotEmpty)
+                  // Strategy Card
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.stone50,
+                      border: Border.all(color: AppTheme.stone200, width: 1),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Recommended',
+                          style: GoogleFonts.inter(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.2,
+                            color: AppTheme.burntOrange,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+                        Text(
+                          '"关于时间节点，我们需要在周三前敲定，否则会影响Q4的整体排期。"',
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.italic,
+                            color: AppTheme.black,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () => appStateNotifier.toggleShowSim(),
+                            icon: const Icon(
+                              Icons.edit_note_outlined,
+                              size: 14,
+                            ),
+                            label: Text(
+                              'Simulate Reply',
+                              style: GoogleFonts.inter(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.black,
+                              foregroundColor: AppTheme.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -290,7 +351,7 @@ class ScannerScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSimulationModal(BuildContext context, WidgetRef ref) {
+  Widget _buildSimulationModal(BuildContext context) {
     final appStateNotifier = ref.read(appStateProvider.notifier);
 
     return GestureDetector(
@@ -500,6 +561,102 @@ class ScannerScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _selectImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+        _uploadResponse = null;
+        _analysisResult = '';
+      });
+    }
+  }
+
+  Future<void> _uploadImageAndAnalyze() async {
+    if (_selectedImage == null) return;
+
+    setState(() {
+      _isUploading = true;
+      _analysisResult = '';
+    });
+
+    try {
+      // 1. Upload Image
+      final chatRepository = ref.read(chatRepositoryProvider);
+      _uploadResponse = await chatRepository.uploadFile(
+        filePath: _selectedImage!.path,
+        fileName: _selectedImage!.path.split('/').last,
+      );
+
+      if (_uploadResponse?.code != 0 || _uploadResponse?.data == null) {
+        throw Exception('Image upload failed: ${_uploadResponse?.msg}');
+      }
+
+      setState(() {
+        _isUploading = false;
+        _isAnalyzing = true;
+      });
+
+      // 2. Send Multimodal Message
+      await _sendMultimodalMessage(_uploadResponse!.data!.id);
+    } catch (e) {
+      setState(() {
+        _isUploading = false;
+        _isAnalyzing = false;
+        _analysisResult = 'Error: $e';
+      });
+    }
+  }
+
+  Future<void> _sendMultimodalMessage(String fileId) async {
+    final chatRepository = ref.read(chatRepositoryProvider);
+
+    // Create multimodal content
+    final multimodalContent = MultimodalContent(type: 'image', fileId: fileId);
+
+    // Serialize multimodal content to JSON string
+    final contentJson = jsonEncode(multimodalContent.toJson());
+
+    // Create chat message with object_string type
+    final message = ChatMessage(
+      content: contentJson,
+      contentType: 'object_string',
+      role: 'user',
+      type: 'question',
+    );
+
+    // Send message and listen to stream
+    final stream = chatRepository.sendChatMessage(
+      botId: '7590746062667972648',
+      userId: '123456789',
+      messages: [message],
+      stream: true,
+    );
+
+    // Collect stream responses
+    String fullResponse = '';
+    await for (final response in stream) {
+      if (response.content != null) {
+        fullResponse += response.content!;
+      }
+    }
+
+    setState(() {
+      _analysisResult = fullResponse;
+      _isAnalyzing = false;
+    });
+  }
+
+  void _resetAnalysis() {
+    setState(() {
+      _selectedImage = null;
+      _uploadResponse = null;
+      _analysisResult = '';
+      _isUploading = false;
+      _isAnalyzing = false;
+    });
   }
 }
 

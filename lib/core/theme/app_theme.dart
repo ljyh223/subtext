@@ -23,7 +23,7 @@ class AppTheme {
       scaffoldBackgroundColor: paperWhite,
       colorScheme: ColorScheme.fromSwatch(
         primarySwatch: Colors.orange,
-      ).copyWith(background: paperWhite),
+      ).copyWith(surface: paperWhite),
       textTheme: TextTheme(
         // Headings - Playfair Display
         headlineLarge: GoogleFonts.playfairDisplay(

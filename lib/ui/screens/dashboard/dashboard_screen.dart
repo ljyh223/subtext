@@ -30,9 +30,7 @@ class DashboardScreen extends StatelessWidget {
   Widget _buildSocialBatteryCard() {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: AppTheme.black,
-      ),
+      decoration: const BoxDecoration(color: AppTheme.black),
       child: Stack(
         children: [
           Positioned(
@@ -122,13 +120,14 @@ class DashboardScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        const Divider(
-          color: AppTheme.black,
-          thickness: 1,
-        ),
+        const Divider(color: AppTheme.black, thickness: 1),
         const SizedBox(height: 16),
         // Insight items
-        _buildInsightItem(1, 'Project Delay Negotiation', 'Defensive | Passive'),
+        _buildInsightItem(
+          1,
+          'Project Delay Negotiation',
+          'Defensive | Passive',
+        ),
         const SizedBox(height: 12),
         _buildInsightItem(2, 'Team Feedback Session', 'Collaborative | Open'),
         const SizedBox(height: 12),
@@ -142,19 +141,14 @@ class DashboardScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.white,
-        border: Border.all(
-          color: AppTheme.stone200,
-          width: 1,
-        ),
+        border: Border.all(color: AppTheme.stone200, width: 1),
       ),
       child: Row(
         children: [
           Container(
             width: 48,
             height: 48,
-            decoration: const BoxDecoration(
-              color: AppTheme.stone100,
-            ),
+            decoration: const BoxDecoration(color: AppTheme.stone100),
             child: Center(
               child: Text(
                 index.toString(),

@@ -67,7 +67,10 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHomeViewToggle(AppState appState, AppStateNotifier appStateNotifier) {
+  Widget _buildHomeViewToggle(
+    AppState appState,
+    AppStateNotifier appStateNotifier,
+  ) {
     return Row(
       children: [
         GestureDetector(
@@ -75,9 +78,13 @@ class HomeScreen extends ConsumerWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             decoration: BoxDecoration(
-              color: appState.homeView == HomeView.overview ? AppTheme.black : AppTheme.stone100,
+              color: appState.homeView == HomeView.overview
+                  ? AppTheme.black
+                  : AppTheme.stone100,
               border: Border.all(
-                color: appState.homeView == HomeView.overview ? AppTheme.black : AppTheme.stone200,
+                color: appState.homeView == HomeView.overview
+                    ? AppTheme.black
+                    : AppTheme.stone200,
                 width: 1,
               ),
             ),
@@ -86,7 +93,9 @@ class HomeScreen extends ConsumerWidget {
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: appState.homeView == HomeView.overview ? AppTheme.white : AppTheme.black,
+                color: appState.homeView == HomeView.overview
+                    ? AppTheme.white
+                    : AppTheme.black,
               ),
             ),
           ),
@@ -96,9 +105,13 @@ class HomeScreen extends ConsumerWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             decoration: BoxDecoration(
-              color: appState.homeView == HomeView.graph ? AppTheme.black : AppTheme.stone100,
+              color: appState.homeView == HomeView.graph
+                  ? AppTheme.black
+                  : AppTheme.stone100,
               border: Border.all(
-                color: appState.homeView == HomeView.graph ? AppTheme.black : AppTheme.stone200,
+                color: appState.homeView == HomeView.graph
+                    ? AppTheme.black
+                    : AppTheme.stone200,
                 width: 1,
               ),
             ),
@@ -107,7 +120,9 @@ class HomeScreen extends ConsumerWidget {
               style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: appState.homeView == HomeView.graph ? AppTheme.white : AppTheme.black,
+                color: appState.homeView == HomeView.graph
+                    ? AppTheme.white
+                    : AppTheme.black,
               ),
             ),
           ),
@@ -131,9 +146,7 @@ class HomeScreen extends ConsumerWidget {
   Widget _buildSocialBatteryCard() {
     return Container(
       padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: AppTheme.black,
-      ),
+      decoration: const BoxDecoration(color: AppTheme.black),
       child: Stack(
         children: [
           Positioned(
@@ -223,13 +236,14 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 8),
-        const Divider(
-          color: AppTheme.black,
-          thickness: 1,
-        ),
+        const Divider(color: AppTheme.black, thickness: 1),
         const SizedBox(height: 16),
         // Insight items
-        _buildInsightItem(1, 'Project Delay Negotiation', 'Defensive | Passive'),
+        _buildInsightItem(
+          1,
+          'Project Delay Negotiation',
+          'Defensive | Passive',
+        ),
         const SizedBox(height: 12),
         _buildInsightItem(2, 'Team Feedback Session', 'Collaborative | Open'),
         const SizedBox(height: 12),
@@ -243,19 +257,14 @@ class HomeScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.white,
-        border: Border.all(
-          color: AppTheme.stone200,
-          width: 1,
-        ),
+        border: Border.all(color: AppTheme.stone200, width: 1),
       ),
       child: Row(
         children: [
           Container(
             width: 48,
             height: 48,
-            decoration: const BoxDecoration(
-              color: AppTheme.stone100,
-            ),
+            decoration: const BoxDecoration(color: AppTheme.stone100),
             child: Center(
               child: Text(
                 index.toString(),
@@ -306,10 +315,7 @@ class HomeScreen extends ConsumerWidget {
           Container(
             decoration: BoxDecoration(
               color: AppTheme.white,
-              border: Border.all(
-                color: AppTheme.stone200,
-                width: 1,
-              ),
+              border: Border.all(color: AppTheme.stone200, width: 1),
             ),
             child: CustomPaint(
               painter: NetworkGraphPainter(),
@@ -328,10 +334,7 @@ class HomeScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: AppTheme.black,
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppTheme.burntOrange,
-                    width: 2,
-                  ),
+                  border: Border.all(color: AppTheme.burntOrange, width: 2),
                 ),
                 child: Center(
                   child: Text(
@@ -358,10 +361,7 @@ class HomeScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: AppTheme.white,
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppTheme.black,
-                    width: 2,
-                  ),
+                  border: Border.all(color: AppTheme.black, width: 2),
                 ),
                 child: Center(
                   child: Text(

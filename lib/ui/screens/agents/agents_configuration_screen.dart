@@ -87,13 +87,7 @@ class AgentsConfigurationScreen extends StatelessWidget {
                   color: iconBackgroundColor,
                   shape: BoxShape.circle,
                 ),
-                child: Center(
-                  child: Icon(
-                    icon,
-                    size: 20,
-                    color: iconColor,
-                  ),
-                ),
+                child: Center(child: Icon(icon, size: 20, color: iconColor)),
               ),
               const SizedBox(width: 12),
               // Text Content
@@ -143,7 +137,9 @@ class AgentsConfigurationScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Align(
-              alignment: isActive ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: isActive
+                  ? Alignment.centerRight
+                  : Alignment.centerLeft,
               child: Container(
                 width: 12,
                 height: 12,

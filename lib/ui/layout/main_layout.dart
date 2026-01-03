@@ -6,6 +6,7 @@ import 'package:subtext/ui/screens/home/home_screen.dart';
 import 'package:subtext/ui/screens/arsenal/arsenal_screen.dart';
 import 'package:subtext/ui/screens/scanner/scanner_screen.dart';
 import 'package:subtext/ui/screens/agents/agents_configuration_screen.dart';
+import 'package:subtext/ui/screens/me/me_screen.dart';
 
 class MainLayout extends ConsumerWidget {
   const MainLayout({super.key});
@@ -51,15 +52,15 @@ class MainLayout extends ConsumerWidget {
       case AppTab.agents:
         return const AgentsConfigurationScreen();
       case AppTab.me:
-        return const Scaffold();
+        return const MeScreen();
     }
   }
 
   Widget _buildBottomNavigationBar(
-      AppState appState,
-      AppStateNotifier appStateNotifier,
-      BuildContext context,
-      ) {
+    AppState appState,
+    AppStateNotifier appStateNotifier,
+    BuildContext context,
+  ) {
     final paddingBottom = MediaQuery.of(context).padding.bottom;
 
     return Container(
@@ -67,11 +68,11 @@ class MainLayout extends ConsumerWidget {
       decoration: BoxDecoration(
         color: AppTheme.paperWhite,
         border: Border(
-          top: BorderSide(color: Colors.black.withOpacity(0.08), width: 1),
+          top: BorderSide(color: Colors.black.withValues(alpha: 20), width: 1),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 15),
             blurRadius: 12,
             offset: const Offset(0, -2),
           ),
@@ -155,12 +156,12 @@ class MainLayout extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.35),
+                        color: Colors.black.withValues(alpha: 89),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
                       ),
                       BoxShadow(
-                        color: AppTheme.black.withOpacity(0.15),
+                        color: Colors.black.withValues(alpha: 38),
                         blurRadius: 30,
                         offset: const Offset(0, 12),
                       ),
@@ -179,7 +180,6 @@ class MainLayout extends ConsumerWidget {
       ),
     );
   }
-
 
   Widget _buildNavItem({
     required IconData icon,

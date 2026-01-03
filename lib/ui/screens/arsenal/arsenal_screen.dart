@@ -89,10 +89,7 @@ class ArsenalScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.white,
-        border: Border.all(
-          color: AppTheme.stone200,
-          width: 1,
-        ),
+        border: Border.all(color: AppTheme.stone200, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -109,9 +106,7 @@ class ArsenalScreen extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: const BoxDecoration(
-                color: AppTheme.stone100,
-              ),
+              decoration: const BoxDecoration(color: AppTheme.stone100),
               child: Center(
                 child: Icon(
                   Icons.library_books_outlined,
