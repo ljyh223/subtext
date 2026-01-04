@@ -11,7 +11,7 @@ class ArsenalListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 监听武器库状态
+    // 监听锦囊状态
     final arsenalState = ref.watch(arsenalNotifierProvider);
     final arsenalNotifier = ref.read(arsenalNotifierProvider.notifier);
 
@@ -28,7 +28,7 @@ class ArsenalListScreen extends ConsumerWidget {
         backgroundColor: AppTheme.paperWhite,
         surfaceTintColor: Colors.transparent,
         title: Text(
-          '武器库',
+          '锦囊',
           style: GoogleFonts.playfairDisplay(
             fontSize: 20,
             fontWeight: FontWeight.w900,
@@ -46,7 +46,7 @@ class ArsenalListScreen extends ConsumerWidget {
             children: [
               // 页面标题
               Text(
-                '武器库',
+                '锦囊',
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 32,
                   fontWeight: FontWeight.w900,
@@ -55,7 +55,7 @@ class ArsenalListScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                '探索各种分类的武器库条目',
+                '探索各种分类的锦囊条目',
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -80,7 +80,7 @@ class ArsenalListScreen extends ConsumerWidget {
               // 空状态
               else if (arsenalState.arsenalList.isEmpty) ...[
                 const Center(
-                  child: Text('暂无武器库条目'),
+                  child: Text('暂无锦囊条目'),
                 ),
               ]
               // 列表状态
@@ -160,7 +160,7 @@ class ArsenalListScreen extends ConsumerWidget {
             // 标题 - 点击标题获取对应category
             GestureDetector(
               onTap: () {
-                // 点击标题时，根据category筛选武器库
+                // 点击标题时，根据category筛选锦囊
                 final arsenalNotifier = ref.read(arsenalNotifierProvider.notifier);
                 arsenalNotifier.fetchArsenalByCategory(arsenal.category);
               },

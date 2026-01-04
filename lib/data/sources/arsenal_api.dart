@@ -6,7 +6,7 @@ class ArsenalApi {
 
   ArsenalApi() : _client = Supabase.instance.client;
 
-  /// 获取所有武器库条目
+  /// 获取所有锦囊条目
   Future<List<Arsenal>> getAllArsenal() async {
     final response = await _client
         .from('arsenal')
@@ -17,7 +17,7 @@ class ArsenalApi {
         .toList();
   }
 
-  /// 根据category获取武器库条目
+  /// 根据category获取锦囊条目
   Future<List<Arsenal>> getArsenalByCategory(String category) async {
     final response = await _client
         .from('arsenal')
@@ -29,7 +29,7 @@ class ArsenalApi {
         .toList();
   }
 
-  /// 根据id获取单个武器库条目
+  /// 根据id获取单个锦囊条目
   Future<Arsenal> getArsenalById(int id) async {
     final response = await _client
         .from('arsenal')
@@ -39,7 +39,7 @@ class ArsenalApi {
     return Arsenal.fromJson(Map<String, dynamic>.from(response));
   }
 
-  /// 增加武器库条目的使用次数
+  /// 增加锦囊条目的使用次数
   Future<void> incrementUsageCount(int id) async {
     await _client
         .from('arsenal')

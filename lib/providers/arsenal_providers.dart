@@ -57,7 +57,7 @@ class ArsenalNotifier extends Notifier<ArsenalState> {
     return const ArsenalState();
   }
 
-  /// 获取所有武器库条目
+  /// 获取所有锦囊条目
   Future<void> fetchAllArsenal() async {
     state = state.copyWith(isLoading: true, error: null);
     try {
@@ -68,7 +68,7 @@ class ArsenalNotifier extends Notifier<ArsenalState> {
     }
   }
 
-  /// 根据category获取武器库条目
+  /// 根据category获取锦囊条目
   Future<void> fetchArsenalByCategory(String category) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
@@ -79,7 +79,7 @@ class ArsenalNotifier extends Notifier<ArsenalState> {
     }
   }
 
-  /// 根据id获取单个武器库条目
+  /// 根据id获取单个锦囊条目
   Future<void> fetchArsenalById(int id) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
@@ -92,7 +92,7 @@ class ArsenalNotifier extends Notifier<ArsenalState> {
     }
   }
 
-  /// 清除选中的武器库条目
+  /// 清除选中的锦囊条目
   void clearSelectedArsenal() {
     state = state.copyWith(selectedArsenal: null);
   }

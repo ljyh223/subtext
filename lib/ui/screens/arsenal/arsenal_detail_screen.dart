@@ -11,7 +11,7 @@ class ArsenalDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 监听武器库状态
+    // 监听锦囊状态
     final arsenalState = ref.watch(arsenalNotifierProvider);
     final arsenalNotifier = ref.read(arsenalNotifierProvider.notifier);
 
@@ -71,7 +71,7 @@ class ArsenalDetailScreen extends ConsumerWidget {
               ]
               // 空状态
               else ...[
-                const Center(child: Text('武器库条目不存在')),
+                const Center(child: Text('锦囊条目不存在')),
               ],
             ],
           ),

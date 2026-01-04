@@ -105,7 +105,7 @@ class MainLayout extends ConsumerWidget {
                   child: _buildNavItem(
                     icon: Icons.library_books_outlined,
                     selectedIcon: Icons.library_books,
-                    label: '武器库',
+                    label: '锦囊',
                     isActive: appState.currentTab == AppTab.arsenal,
                     onTap: () => appStateNotifier.setCurrentTab(AppTab.arsenal),
                   ),
