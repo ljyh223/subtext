@@ -71,7 +71,14 @@ class _TestScreenState extends ConsumerState<TestScreen> {
   @override
   Widget build(BuildContext context) {
     final chatState = ref.watch(chatNotifierProvider);
-    final chatNotifier = ref.read(chatNotifierProvider.notifier);
+
+    // 显示加载状态
+    if (chatState.isLoading) {
+      debugPrint('TestScreen: isLoading = true');
+    }
+
+    // 显示消息数量变化
+    debugPrint('TestScreen: messages length = ${chatState.messages.length}');
 
     return Scaffold(
       backgroundColor: AppTheme.paperWhite,
@@ -113,7 +120,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
               const SizedBox(height: 32),
 
               // 流式对话测试
-              _buildChatTestSection(chatState, chatNotifier),
+              _buildChatTestSection(chatState),
             ],
           ),
         ),
@@ -209,13 +216,53 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                     color: AppTheme.stone100,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    _uploadResult,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: AppTheme.stone600,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _uploadResult,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: AppTheme.stone600,
+                        ),
+                      ),
+                      if (_uploadResult.contains('上传成功!')) ...[
+                        const SizedBox(height: 12),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            // 从上传结果中提取fileId
+                            final fileIdMatch = RegExp(
+                              r'文件ID: ([^\n]+)',
+                            ).firstMatch(_uploadResult);
+                            if (fileIdMatch != null) {
+                              final fileId = fileIdMatch.group(1)!;
+                              // 发送图片消息
+                              ref
+                                  .read(chatNotifierProvider.notifier)
+                                  .sendImageMessage(
+                                    botId: '7590746062667972648', // 使用实际的bot_id
+                                    userId: '123456789',
+                                    fileId: fileId,
+                                  );
+                            }
+                          },
+                          icon: const Icon(Icons.send_outlined),
+                          label: const Text('使用该图片发送消息'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.black,
+                            foregroundColor: AppTheme.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ],
@@ -226,7 +273,9 @@ class _TestScreenState extends ConsumerState<TestScreen> {
     );
   }
 
-  Widget _buildChatTestSection(ChatState chatState, ChatNotifier chatNotifier) {
+  Widget _buildChatTestSection(ChatState chatState) {
+    final chatNotifier = ref.read(chatNotifierProvider.notifier);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -335,7 +384,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                         onSubmitted: (value) {
                           if (value.trim().isNotEmpty) {
                             chatNotifier.sendMessage(
-                              botId: '7348293334459310000', // 替换为实际的bot_id
+                              botId: '7590746062667972648', // 使用实际的bot_id
                               userId: '123456789',
                               content: value.trim(),
                             );
@@ -352,7 +401,7 @@ class _TestScreenState extends ConsumerState<TestScreen> {
                         final content = _textController.text.trim();
                         if (content.isNotEmpty) {
                           chatNotifier.sendMessage(
-                            botId: '7348293334459310000', // 替换为实际的bot_id
+                            botId: '7590746062667972648', // 使用实际的bot_id
                             userId: '123456789',
                             content: content,
                           );

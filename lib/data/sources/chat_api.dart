@@ -42,6 +42,7 @@ class ChatApi {
                 'role': msg.role,
                 'content': msg.content,
                 'content_type': msg.contentType,
+                'type': msg.type,
               },
             )
             .toList(),
@@ -65,63 +66,137 @@ class ChatApi {
 
       // 处理流式响应
       if (stream) {
+        // 使用Utf8Decoder处理不完整的UTF-8字节序列
+        final utf8Decoder = Utf8Decoder(allowMalformed: true);
+        final buffer = StringBuffer();
+
         // 显式指定StreamTransformer的泛型类型为Uint8List和AIResponse
-        final StreamTransformer<Uint8List, AIResponse> streamTransformer =
-            StreamTransformer.fromHandlers(
-              handleData: (data, sink) {
-                // 解析SSE格式的响应
-                final listData = data as List<int>;
-                final decoded = utf8.decode(listData);
-                final lines = decoded.split('\n');
+        final StreamTransformer<Uint8List, AIResponse>
+        streamTransformer = StreamTransformer.fromHandlers(
+          handleData: (data, sink) {
+            // 解码当前数据块，并将结果添加到缓冲区
+            final decodedChunk = utf8Decoder.convert(data as List<int>);
+            buffer.write(decodedChunk);
 
-                // 临时存储当前事件类型
-                String? currentEvent;
+            // 处理缓冲区中的完整消息
+            String content = buffer.toString();
+            int lastNewlineIndex = content.lastIndexOf('\n');
 
-                for (final line in lines) {
-                  if (line.trim().isEmpty) continue;
+            if (lastNewlineIndex != -1) {
+              String completeContent = content.substring(
+                0,
+                lastNewlineIndex + 1,
+              );
+              String remainingContent = content.substring(lastNewlineIndex + 1);
 
-                  // 解析事件类型
-                  if (line.startsWith('event:')) {
-                    currentEvent = line.substring(6).trim();
-                    continue;
+              // 清空缓冲区并添加剩余内容
+              buffer.clear();
+              buffer.write(remainingContent);
+
+              // 解析完整的SSE内容
+              final lines = completeContent.split('\n');
+
+              // 临时存储当前事件类型
+              String? currentEvent;
+
+              for (final line in lines) {
+                if (line.trim().isEmpty) continue;
+
+                // 解析事件类型
+                if (line.startsWith('event:')) {
+                  currentEvent = line.substring(6).trim();
+                  continue;
+                }
+
+                // 解析数据
+                if (line.startsWith('data:')) {
+                  final jsonString = line.substring(5).trim();
+
+                  // 处理结束事件
+                  if (jsonString == '[DONE]' ||
+                      (currentEvent == 'done' && jsonString == '[DONE]')) {
+                    Logger.d('ChatApi', 'Received stream done event');
+                    sink.close();
+                    return;
                   }
 
-                  // 解析数据
-                  if (line.startsWith('data:')) {
-                    final jsonString = line.substring(5).trim();
+                  try {
+                    final json = jsonDecode(jsonString);
+                    Logger.d(
+                      'ChatApi',
+                      'Received event: $currentEvent, data: $json',
+                    );
 
-                    // 处理结束事件
-                    if (jsonString == '[DONE]' ||
-                        (currentEvent == 'done' && jsonString == '"[DONE]"')) {
-                      Logger.d('ChatApi', 'Received stream done event');
-                      sink.close();
-                      return;
-                    }
+                    // 只处理与消息相关的事件
+                    if (currentEvent == 'conversation.message.delta' ||
+                        currentEvent == 'conversation.message.completed') {
+                      // 检查JSON结构，特别是content字段的位置
+                      Logger.d('ChatApi', 'JSON keys: ${json.keys.join(', ')}');
 
-                    try {
-                      final json = jsonDecode(jsonString);
+                      // 从message对象中提取content
+                      final messageJson = json['message'] ?? json;
                       Logger.d(
                         'ChatApi',
-                        'Received event: $currentEvent, data: $json',
+                        'Message JSON keys: ${messageJson.keys.join(', ')}',
                       );
 
-                      // 只处理与消息相关的事件
-                      if (currentEvent == 'conversation.message.delta' ||
-                          currentEvent == 'conversation.message.completed') {
-                        final aiResponse = AIResponse.fromJson(json);
-                        sink.add(aiResponse);
-                      }
-                    } catch (e) {
-                      Logger.e('ChatApi', 'Error parsing AI response: $e');
+                      final aiResponse = AIResponse.fromJson(messageJson);
+                      sink.add(aiResponse);
                     }
+                  } catch (e) {
+                    Logger.e('ChatApi', 'Error parsing AI response: $e');
                   }
                 }
-              },
-              handleError: (error, stackTrace, sink) {
-                Logger.e('ChatApi', 'Stream error: $error', error, stackTrace);
-                sink.addError(error);
-              },
-            );
+              }
+            }
+          },
+          handleError: (error, stackTrace, sink) {
+            Logger.e('ChatApi', 'Stream error: $error', error, stackTrace);
+            sink.addError(error);
+          },
+          handleDone: (sink) {
+            // 处理缓冲区中剩余的数据
+            if (buffer.isNotEmpty) {
+              final lines = buffer.toString().split('\n');
+
+              // 临时存储当前事件类型
+              String? currentEvent;
+
+              for (final line in lines) {
+                if (line.trim().isEmpty) continue;
+
+                // 解析事件类型
+                if (line.startsWith('event:')) {
+                  currentEvent = line.substring(6).trim();
+                  continue;
+                }
+
+                // 解析数据
+                if (line.startsWith('data:')) {
+                  final jsonString = line.substring(5).trim();
+
+                  try {
+                    final json = jsonDecode(jsonString);
+                    Logger.d(
+                      'ChatApi',
+                      'Received event: $currentEvent, data: $json',
+                    );
+
+                    // 只处理与消息相关的事件
+                    if (currentEvent == 'conversation.message.delta' ||
+                        currentEvent == 'conversation.message.completed') {
+                      final aiResponse = AIResponse.fromJson(json);
+                      sink.add(aiResponse);
+                    }
+                  } catch (e) {
+                    Logger.e('ChatApi', 'Error parsing AI response: $e');
+                  }
+                }
+              }
+            }
+            sink.close();
+          },
+        );
 
         final stream = response.data.stream.transform(streamTransformer);
         yield* stream;

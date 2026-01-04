@@ -28,11 +28,17 @@ mixin _$AIResponse {
   String? get userId => throw _privateConstructorUsedError;
   @JsonKey(name: 'conversation_id')
   String? get conversationId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'section_id')
+  String? get sectionId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'chat_id')
+  String? get chatId => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
   String? get role => throw _privateConstructorUsedError;
   String? get content => throw _privateConstructorUsedError;
   @JsonKey(name: 'content_images')
   List<String>? get contentImages => throw _privateConstructorUsedError;
+  @JsonKey(name: 'content_type')
+  String? get contentType => throw _privateConstructorUsedError;
   @JsonKey(name: 'tool_calls')
   List<Map<String, dynamic>>? get toolCalls =>
       throw _privateConstructorUsedError;
@@ -41,9 +47,17 @@ mixin _$AIResponse {
   String? get errorCode => throw _privateConstructorUsedError;
   @JsonKey(name: 'error_msg')
   String? get errorMsg => throw _privateConstructorUsedError;
+  @JsonKey(name: 'meta_data')
+  Map<String, String>? get metaData => throw _privateConstructorUsedError;
   Map<String, dynamic>? get usage => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
-  String? get createdAt => throw _privateConstructorUsedError;
+  int? get createdAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'updated_at')
+  int? get updatedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'reasoning_content')
+  String? get reasoningContent => throw _privateConstructorUsedError;
+  @JsonKey(name: 'time_cost')
+  Map<String, dynamic>? get timeCost => throw _privateConstructorUsedError;
 
   /// Serializes this AIResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -67,16 +81,23 @@ abstract class $AIResponseCopyWith<$Res> {
     @JsonKey(name: 'bot_id') String? botId,
     @JsonKey(name: 'user_id') String? userId,
     @JsonKey(name: 'conversation_id') String? conversationId,
+    @JsonKey(name: 'section_id') String? sectionId,
+    @JsonKey(name: 'chat_id') String? chatId,
     String? type,
     String? role,
     String? content,
     @JsonKey(name: 'content_images') List<String>? contentImages,
+    @JsonKey(name: 'content_type') String? contentType,
     @JsonKey(name: 'tool_calls') List<Map<String, dynamic>>? toolCalls,
     String? status,
     @JsonKey(name: 'error_code') String? errorCode,
     @JsonKey(name: 'error_msg') String? errorMsg,
+    @JsonKey(name: 'meta_data') Map<String, String>? metaData,
     Map<String, dynamic>? usage,
-    @JsonKey(name: 'created_at') String? createdAt,
+    @JsonKey(name: 'created_at') int? createdAt,
+    @JsonKey(name: 'updated_at') int? updatedAt,
+    @JsonKey(name: 'reasoning_content') String? reasoningContent,
+    @JsonKey(name: 'time_cost') Map<String, dynamic>? timeCost,
   });
 }
 
@@ -99,16 +120,23 @@ class _$AIResponseCopyWithImpl<$Res, $Val extends AIResponse>
     Object? botId = freezed,
     Object? userId = freezed,
     Object? conversationId = freezed,
+    Object? sectionId = freezed,
+    Object? chatId = freezed,
     Object? type = freezed,
     Object? role = freezed,
     Object? content = freezed,
     Object? contentImages = freezed,
+    Object? contentType = freezed,
     Object? toolCalls = freezed,
     Object? status = freezed,
     Object? errorCode = freezed,
     Object? errorMsg = freezed,
+    Object? metaData = freezed,
     Object? usage = freezed,
     Object? createdAt = freezed,
+    Object? updatedAt = freezed,
+    Object? reasoningContent = freezed,
+    Object? timeCost = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -128,6 +156,14 @@ class _$AIResponseCopyWithImpl<$Res, $Val extends AIResponse>
                 ? _value.conversationId
                 : conversationId // ignore: cast_nullable_to_non_nullable
                       as String?,
+            sectionId: freezed == sectionId
+                ? _value.sectionId
+                : sectionId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            chatId: freezed == chatId
+                ? _value.chatId
+                : chatId // ignore: cast_nullable_to_non_nullable
+                      as String?,
             type: freezed == type
                 ? _value.type
                 : type // ignore: cast_nullable_to_non_nullable
@@ -144,6 +180,10 @@ class _$AIResponseCopyWithImpl<$Res, $Val extends AIResponse>
                 ? _value.contentImages
                 : contentImages // ignore: cast_nullable_to_non_nullable
                       as List<String>?,
+            contentType: freezed == contentType
+                ? _value.contentType
+                : contentType // ignore: cast_nullable_to_non_nullable
+                      as String?,
             toolCalls: freezed == toolCalls
                 ? _value.toolCalls
                 : toolCalls // ignore: cast_nullable_to_non_nullable
@@ -160,6 +200,10 @@ class _$AIResponseCopyWithImpl<$Res, $Val extends AIResponse>
                 ? _value.errorMsg
                 : errorMsg // ignore: cast_nullable_to_non_nullable
                       as String?,
+            metaData: freezed == metaData
+                ? _value.metaData
+                : metaData // ignore: cast_nullable_to_non_nullable
+                      as Map<String, String>?,
             usage: freezed == usage
                 ? _value.usage
                 : usage // ignore: cast_nullable_to_non_nullable
@@ -167,7 +211,19 @@ class _$AIResponseCopyWithImpl<$Res, $Val extends AIResponse>
             createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            reasoningContent: freezed == reasoningContent
+                ? _value.reasoningContent
+                : reasoningContent // ignore: cast_nullable_to_non_nullable
                       as String?,
+            timeCost: freezed == timeCost
+                ? _value.timeCost
+                : timeCost // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
           )
           as $Val,
     );
@@ -188,16 +244,23 @@ abstract class _$$AIResponseImplCopyWith<$Res>
     @JsonKey(name: 'bot_id') String? botId,
     @JsonKey(name: 'user_id') String? userId,
     @JsonKey(name: 'conversation_id') String? conversationId,
+    @JsonKey(name: 'section_id') String? sectionId,
+    @JsonKey(name: 'chat_id') String? chatId,
     String? type,
     String? role,
     String? content,
     @JsonKey(name: 'content_images') List<String>? contentImages,
+    @JsonKey(name: 'content_type') String? contentType,
     @JsonKey(name: 'tool_calls') List<Map<String, dynamic>>? toolCalls,
     String? status,
     @JsonKey(name: 'error_code') String? errorCode,
     @JsonKey(name: 'error_msg') String? errorMsg,
+    @JsonKey(name: 'meta_data') Map<String, String>? metaData,
     Map<String, dynamic>? usage,
-    @JsonKey(name: 'created_at') String? createdAt,
+    @JsonKey(name: 'created_at') int? createdAt,
+    @JsonKey(name: 'updated_at') int? updatedAt,
+    @JsonKey(name: 'reasoning_content') String? reasoningContent,
+    @JsonKey(name: 'time_cost') Map<String, dynamic>? timeCost,
   });
 }
 
@@ -219,16 +282,23 @@ class __$$AIResponseImplCopyWithImpl<$Res>
     Object? botId = freezed,
     Object? userId = freezed,
     Object? conversationId = freezed,
+    Object? sectionId = freezed,
+    Object? chatId = freezed,
     Object? type = freezed,
     Object? role = freezed,
     Object? content = freezed,
     Object? contentImages = freezed,
+    Object? contentType = freezed,
     Object? toolCalls = freezed,
     Object? status = freezed,
     Object? errorCode = freezed,
     Object? errorMsg = freezed,
+    Object? metaData = freezed,
     Object? usage = freezed,
     Object? createdAt = freezed,
+    Object? updatedAt = freezed,
+    Object? reasoningContent = freezed,
+    Object? timeCost = freezed,
   }) {
     return _then(
       _$AIResponseImpl(
@@ -248,6 +318,14 @@ class __$$AIResponseImplCopyWithImpl<$Res>
             ? _value.conversationId
             : conversationId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        sectionId: freezed == sectionId
+            ? _value.sectionId
+            : sectionId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        chatId: freezed == chatId
+            ? _value.chatId
+            : chatId // ignore: cast_nullable_to_non_nullable
+                  as String?,
         type: freezed == type
             ? _value.type
             : type // ignore: cast_nullable_to_non_nullable
@@ -264,6 +342,10 @@ class __$$AIResponseImplCopyWithImpl<$Res>
             ? _value._contentImages
             : contentImages // ignore: cast_nullable_to_non_nullable
                   as List<String>?,
+        contentType: freezed == contentType
+            ? _value.contentType
+            : contentType // ignore: cast_nullable_to_non_nullable
+                  as String?,
         toolCalls: freezed == toolCalls
             ? _value._toolCalls
             : toolCalls // ignore: cast_nullable_to_non_nullable
@@ -280,6 +362,10 @@ class __$$AIResponseImplCopyWithImpl<$Res>
             ? _value.errorMsg
             : errorMsg // ignore: cast_nullable_to_non_nullable
                   as String?,
+        metaData: freezed == metaData
+            ? _value._metaData
+            : metaData // ignore: cast_nullable_to_non_nullable
+                  as Map<String, String>?,
         usage: freezed == usage
             ? _value._usage
             : usage // ignore: cast_nullable_to_non_nullable
@@ -287,7 +373,19 @@ class __$$AIResponseImplCopyWithImpl<$Res>
         createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        reasoningContent: freezed == reasoningContent
+            ? _value.reasoningContent
+            : reasoningContent // ignore: cast_nullable_to_non_nullable
                   as String?,
+        timeCost: freezed == timeCost
+            ? _value._timeCost
+            : timeCost // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
       ),
     );
   }
@@ -301,19 +399,28 @@ class _$AIResponseImpl implements _AIResponse {
     @JsonKey(name: 'bot_id') this.botId,
     @JsonKey(name: 'user_id') this.userId,
     @JsonKey(name: 'conversation_id') this.conversationId,
+    @JsonKey(name: 'section_id') this.sectionId,
+    @JsonKey(name: 'chat_id') this.chatId,
     this.type,
     this.role,
     this.content,
     @JsonKey(name: 'content_images') final List<String>? contentImages,
+    @JsonKey(name: 'content_type') this.contentType,
     @JsonKey(name: 'tool_calls') final List<Map<String, dynamic>>? toolCalls,
     this.status,
     @JsonKey(name: 'error_code') this.errorCode,
     @JsonKey(name: 'error_msg') this.errorMsg,
+    @JsonKey(name: 'meta_data') final Map<String, String>? metaData,
     final Map<String, dynamic>? usage,
     @JsonKey(name: 'created_at') this.createdAt,
+    @JsonKey(name: 'updated_at') this.updatedAt,
+    @JsonKey(name: 'reasoning_content') this.reasoningContent,
+    @JsonKey(name: 'time_cost') final Map<String, dynamic>? timeCost,
   }) : _contentImages = contentImages,
        _toolCalls = toolCalls,
-       _usage = usage;
+       _metaData = metaData,
+       _usage = usage,
+       _timeCost = timeCost;
 
   factory _$AIResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$AIResponseImplFromJson(json);
@@ -329,6 +436,12 @@ class _$AIResponseImpl implements _AIResponse {
   @override
   @JsonKey(name: 'conversation_id')
   final String? conversationId;
+  @override
+  @JsonKey(name: 'section_id')
+  final String? sectionId;
+  @override
+  @JsonKey(name: 'chat_id')
+  final String? chatId;
   @override
   final String? type;
   @override
@@ -346,6 +459,9 @@ class _$AIResponseImpl implements _AIResponse {
     return EqualUnmodifiableListView(value);
   }
 
+  @override
+  @JsonKey(name: 'content_type')
+  final String? contentType;
   final List<Map<String, dynamic>>? _toolCalls;
   @override
   @JsonKey(name: 'tool_calls')
@@ -365,6 +481,17 @@ class _$AIResponseImpl implements _AIResponse {
   @override
   @JsonKey(name: 'error_msg')
   final String? errorMsg;
+  final Map<String, String>? _metaData;
+  @override
+  @JsonKey(name: 'meta_data')
+  Map<String, String>? get metaData {
+    final value = _metaData;
+    if (value == null) return null;
+    if (_metaData is EqualUnmodifiableMapView) return _metaData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
   final Map<String, dynamic>? _usage;
   @override
   Map<String, dynamic>? get usage {
@@ -377,11 +504,27 @@ class _$AIResponseImpl implements _AIResponse {
 
   @override
   @JsonKey(name: 'created_at')
-  final String? createdAt;
+  final int? createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  final int? updatedAt;
+  @override
+  @JsonKey(name: 'reasoning_content')
+  final String? reasoningContent;
+  final Map<String, dynamic>? _timeCost;
+  @override
+  @JsonKey(name: 'time_cost')
+  Map<String, dynamic>? get timeCost {
+    final value = _timeCost;
+    if (value == null) return null;
+    if (_timeCost is EqualUnmodifiableMapView) return _timeCost;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'AIResponse(id: $id, botId: $botId, userId: $userId, conversationId: $conversationId, type: $type, role: $role, content: $content, contentImages: $contentImages, toolCalls: $toolCalls, status: $status, errorCode: $errorCode, errorMsg: $errorMsg, usage: $usage, createdAt: $createdAt)';
+    return 'AIResponse(id: $id, botId: $botId, userId: $userId, conversationId: $conversationId, sectionId: $sectionId, chatId: $chatId, type: $type, role: $role, content: $content, contentImages: $contentImages, contentType: $contentType, toolCalls: $toolCalls, status: $status, errorCode: $errorCode, errorMsg: $errorMsg, metaData: $metaData, usage: $usage, createdAt: $createdAt, updatedAt: $updatedAt, reasoningContent: $reasoningContent, timeCost: $timeCost)';
   }
 
   @override
@@ -394,6 +537,9 @@ class _$AIResponseImpl implements _AIResponse {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.conversationId, conversationId) ||
                 other.conversationId == conversationId) &&
+            (identical(other.sectionId, sectionId) ||
+                other.sectionId == sectionId) &&
+            (identical(other.chatId, chatId) || other.chatId == chatId) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.role, role) || other.role == role) &&
             (identical(other.content, content) || other.content == content) &&
@@ -401,6 +547,8 @@ class _$AIResponseImpl implements _AIResponse {
               other._contentImages,
               _contentImages,
             ) &&
+            (identical(other.contentType, contentType) ||
+                other.contentType == contentType) &&
             const DeepCollectionEquality().equals(
               other._toolCalls,
               _toolCalls,
@@ -410,30 +558,43 @@ class _$AIResponseImpl implements _AIResponse {
                 other.errorCode == errorCode) &&
             (identical(other.errorMsg, errorMsg) ||
                 other.errorMsg == errorMsg) &&
+            const DeepCollectionEquality().equals(other._metaData, _metaData) &&
             const DeepCollectionEquality().equals(other._usage, _usage) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.reasoningContent, reasoningContent) ||
+                other.reasoningContent == reasoningContent) &&
+            const DeepCollectionEquality().equals(other._timeCost, _timeCost));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     runtimeType,
     id,
     botId,
     userId,
     conversationId,
+    sectionId,
+    chatId,
     type,
     role,
     content,
     const DeepCollectionEquality().hash(_contentImages),
+    contentType,
     const DeepCollectionEquality().hash(_toolCalls),
     status,
     errorCode,
     errorMsg,
+    const DeepCollectionEquality().hash(_metaData),
     const DeepCollectionEquality().hash(_usage),
     createdAt,
-  );
+    updatedAt,
+    reasoningContent,
+    const DeepCollectionEquality().hash(_timeCost),
+  ]);
 
   /// Create a copy of AIResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -455,16 +616,23 @@ abstract class _AIResponse implements AIResponse {
     @JsonKey(name: 'bot_id') final String? botId,
     @JsonKey(name: 'user_id') final String? userId,
     @JsonKey(name: 'conversation_id') final String? conversationId,
+    @JsonKey(name: 'section_id') final String? sectionId,
+    @JsonKey(name: 'chat_id') final String? chatId,
     final String? type,
     final String? role,
     final String? content,
     @JsonKey(name: 'content_images') final List<String>? contentImages,
+    @JsonKey(name: 'content_type') final String? contentType,
     @JsonKey(name: 'tool_calls') final List<Map<String, dynamic>>? toolCalls,
     final String? status,
     @JsonKey(name: 'error_code') final String? errorCode,
     @JsonKey(name: 'error_msg') final String? errorMsg,
+    @JsonKey(name: 'meta_data') final Map<String, String>? metaData,
     final Map<String, dynamic>? usage,
-    @JsonKey(name: 'created_at') final String? createdAt,
+    @JsonKey(name: 'created_at') final int? createdAt,
+    @JsonKey(name: 'updated_at') final int? updatedAt,
+    @JsonKey(name: 'reasoning_content') final String? reasoningContent,
+    @JsonKey(name: 'time_cost') final Map<String, dynamic>? timeCost,
   }) = _$AIResponseImpl;
 
   factory _AIResponse.fromJson(Map<String, dynamic> json) =
@@ -482,6 +650,12 @@ abstract class _AIResponse implements AIResponse {
   @JsonKey(name: 'conversation_id')
   String? get conversationId;
   @override
+  @JsonKey(name: 'section_id')
+  String? get sectionId;
+  @override
+  @JsonKey(name: 'chat_id')
+  String? get chatId;
+  @override
   String? get type;
   @override
   String? get role;
@@ -490,6 +664,9 @@ abstract class _AIResponse implements AIResponse {
   @override
   @JsonKey(name: 'content_images')
   List<String>? get contentImages;
+  @override
+  @JsonKey(name: 'content_type')
+  String? get contentType;
   @override
   @JsonKey(name: 'tool_calls')
   List<Map<String, dynamic>>? get toolCalls;
@@ -502,10 +679,22 @@ abstract class _AIResponse implements AIResponse {
   @JsonKey(name: 'error_msg')
   String? get errorMsg;
   @override
+  @JsonKey(name: 'meta_data')
+  Map<String, String>? get metaData;
+  @override
   Map<String, dynamic>? get usage;
   @override
   @JsonKey(name: 'created_at')
-  String? get createdAt;
+  int? get createdAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  int? get updatedAt;
+  @override
+  @JsonKey(name: 'reasoning_content')
+  String? get reasoningContent;
+  @override
+  @JsonKey(name: 'time_cost')
+  Map<String, dynamic>? get timeCost;
 
   /// Create a copy of AIResponse
   /// with the given fields replaced by the non-null parameter values.

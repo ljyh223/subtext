@@ -8,7 +8,7 @@ part of 'chat_message.dart';
 
 _$ChatMessageImpl _$$ChatMessageImplFromJson(Map<String, dynamic> json) =>
     _$ChatMessageImpl(
-      content: json['content'],
+      content: json['content'] as String,
       contentType: json['content_type'] as String,
       role: json['role'] as String,
       type: json['type'] as String,
@@ -27,8 +27,8 @@ _$MultimodalContentImpl _$$MultimodalContentImplFromJson(
 ) => _$MultimodalContentImpl(
   type: json['type'] as String,
   text: json['text'] as String?,
-  fileId: json['fileId'] as String?,
-  fileUrl: json['fileUrl'] as String?,
+  fileId: json['file_id'] as String?,
+  fileUrl: json['file_url'] as String?,
 );
 
 Map<String, dynamic> _$$MultimodalContentImplToJson(
@@ -36,6 +36,6 @@ Map<String, dynamic> _$$MultimodalContentImplToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'text': instance.text,
-  'fileId': instance.fileId,
-  'fileUrl': instance.fileUrl,
+  'file_id': instance.fileId,
+  'file_url': instance.fileUrl,
 };

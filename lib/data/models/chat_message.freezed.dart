@@ -21,7 +21,7 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChatMessage {
-  dynamic get content => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
   @JsonKey(name: 'content_type')
   String get contentType => throw _privateConstructorUsedError;
   String get role => throw _privateConstructorUsedError;
@@ -45,7 +45,7 @@ abstract class $ChatMessageCopyWith<$Res> {
   ) = _$ChatMessageCopyWithImpl<$Res, ChatMessage>;
   @useResult
   $Res call({
-    dynamic content,
+    String content,
     @JsonKey(name: 'content_type') String contentType,
     String role,
     String type,
@@ -67,17 +67,17 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? content = freezed,
+    Object? content = null,
     Object? contentType = null,
     Object? role = null,
     Object? type = null,
   }) {
     return _then(
       _value.copyWith(
-            content: freezed == content
+            content: null == content
                 ? _value.content
                 : content // ignore: cast_nullable_to_non_nullable
-                      as dynamic,
+                      as String,
             contentType: null == contentType
                 ? _value.contentType
                 : contentType // ignore: cast_nullable_to_non_nullable
@@ -106,7 +106,7 @@ abstract class _$$ChatMessageImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    dynamic content,
+    String content,
     @JsonKey(name: 'content_type') String contentType,
     String role,
     String type,
@@ -127,17 +127,17 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? content = freezed,
+    Object? content = null,
     Object? contentType = null,
     Object? role = null,
     Object? type = null,
   }) {
     return _then(
       _$ChatMessageImpl(
-        content: freezed == content
+        content: null == content
             ? _value.content
             : content // ignore: cast_nullable_to_non_nullable
-                  as dynamic,
+                  as String,
         contentType: null == contentType
             ? _value.contentType
             : contentType // ignore: cast_nullable_to_non_nullable
@@ -169,7 +169,7 @@ class _$ChatMessageImpl implements _ChatMessage {
       _$$ChatMessageImplFromJson(json);
 
   @override
-  final dynamic content;
+  final String content;
   @override
   @JsonKey(name: 'content_type')
   final String contentType;
@@ -188,7 +188,7 @@ class _$ChatMessageImpl implements _ChatMessage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ChatMessageImpl &&
-            const DeepCollectionEquality().equals(other.content, content) &&
+            (identical(other.content, content) || other.content == content) &&
             (identical(other.contentType, contentType) ||
                 other.contentType == contentType) &&
             (identical(other.role, role) || other.role == role) &&
@@ -197,13 +197,8 @@ class _$ChatMessageImpl implements _ChatMessage {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(content),
-    contentType,
-    role,
-    type,
-  );
+  int get hashCode =>
+      Object.hash(runtimeType, content, contentType, role, type);
 
   /// Create a copy of ChatMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -221,7 +216,7 @@ class _$ChatMessageImpl implements _ChatMessage {
 
 abstract class _ChatMessage implements ChatMessage {
   const factory _ChatMessage({
-    required final dynamic content,
+    required final String content,
     @JsonKey(name: 'content_type') required final String contentType,
     required final String role,
     required final String type,
@@ -231,7 +226,7 @@ abstract class _ChatMessage implements ChatMessage {
       _$ChatMessageImpl.fromJson;
 
   @override
-  dynamic get content;
+  String get content;
   @override
   @JsonKey(name: 'content_type')
   String get contentType;
@@ -256,7 +251,9 @@ MultimodalContent _$MultimodalContentFromJson(Map<String, dynamic> json) {
 mixin _$MultimodalContent {
   String get type => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
+  @JsonKey(name: 'file_id')
   String? get fileId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'file_url')
   String? get fileUrl => throw _privateConstructorUsedError;
 
   /// Serializes this MultimodalContent to a JSON map.
@@ -276,7 +273,12 @@ abstract class $MultimodalContentCopyWith<$Res> {
     $Res Function(MultimodalContent) then,
   ) = _$MultimodalContentCopyWithImpl<$Res, MultimodalContent>;
   @useResult
-  $Res call({String type, String? text, String? fileId, String? fileUrl});
+  $Res call({
+    String type,
+    String? text,
+    @JsonKey(name: 'file_id') String? fileId,
+    @JsonKey(name: 'file_url') String? fileUrl,
+  });
 }
 
 /// @nodoc
@@ -332,7 +334,12 @@ abstract class _$$MultimodalContentImplCopyWith<$Res>
   ) = __$$MultimodalContentImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String type, String? text, String? fileId, String? fileUrl});
+  $Res call({
+    String type,
+    String? text,
+    @JsonKey(name: 'file_id') String? fileId,
+    @JsonKey(name: 'file_url') String? fileUrl,
+  });
 }
 
 /// @nodoc
@@ -383,8 +390,8 @@ class _$MultimodalContentImpl implements _MultimodalContent {
   const _$MultimodalContentImpl({
     required this.type,
     this.text,
-    this.fileId,
-    this.fileUrl,
+    @JsonKey(name: 'file_id') this.fileId,
+    @JsonKey(name: 'file_url') this.fileUrl,
   });
 
   factory _$MultimodalContentImpl.fromJson(Map<String, dynamic> json) =>
@@ -395,8 +402,10 @@ class _$MultimodalContentImpl implements _MultimodalContent {
   @override
   final String? text;
   @override
+  @JsonKey(name: 'file_id')
   final String? fileId;
   @override
+  @JsonKey(name: 'file_url')
   final String? fileUrl;
 
   @override
@@ -440,8 +449,8 @@ abstract class _MultimodalContent implements MultimodalContent {
   const factory _MultimodalContent({
     required final String type,
     final String? text,
-    final String? fileId,
-    final String? fileUrl,
+    @JsonKey(name: 'file_id') final String? fileId,
+    @JsonKey(name: 'file_url') final String? fileUrl,
   }) = _$MultimodalContentImpl;
 
   factory _MultimodalContent.fromJson(Map<String, dynamic> json) =
@@ -452,8 +461,10 @@ abstract class _MultimodalContent implements MultimodalContent {
   @override
   String? get text;
   @override
+  @JsonKey(name: 'file_id')
   String? get fileId;
   @override
+  @JsonKey(name: 'file_url')
   String? get fileUrl;
 
   /// Create a copy of MultimodalContent

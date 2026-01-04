@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
-import 'package:subtext/data/models/chat_message.dart';
+import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/file_upload_response.dart';
 import 'package:subtext/providers/app_state_provider.dart';
 import 'package:subtext/providers/chat_provider.dart';
@@ -612,40 +611,41 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   Future<void> _sendMultimodalMessage(String fileId) async {
     final chatRepository = ref.read(chatRepositoryProvider);
 
-    // Create multimodal content
-    final multimodalContent = MultimodalContent(type: 'image', fileId: fileId);
-
-    // Serialize multimodal content to JSON string
-    final contentJson = jsonEncode(multimodalContent.toJson());
-
-    // Create chat message with object_string type
-    final message = ChatMessage(
-      content: contentJson,
-      contentType: 'object_string',
-      role: 'user',
-      type: 'question',
-    );
-
-    // Send message and listen to stream
-    final stream = chatRepository.sendChatMessage(
+    // 使用新的sendImageMessage方法发送图片消息
+    final stream = chatRepository.sendImageMessage(
       botId: '7590746062667972648',
-      userId: '4132430370061324',
-      messages: [message],
+      userId: '123456',
+      fileId: fileId,
       stream: true,
     );
 
-    // Collect stream responses
+    // 订阅流，实时更新UI
     String fullResponse = '';
-    await for (final response in stream) {
-      if (response.content != null) {
-        fullResponse += response.content!;
-      }
-    }
 
-    setState(() {
-      _analysisResult = fullResponse;
-      _isAnalyzing = false;
-    });
+    // 监听流事件，实时更新UI
+    stream.listen(
+      (response) {
+        if (response.content != null) {
+          fullResponse += response.content!;
+          setState(() {
+            _analysisResult = fullResponse;
+          });
+        }
+      },
+      onError: (error) {
+        Logger.e('ScannerScreen', 'Stream error: $error');
+        setState(() {
+          _analysisResult = 'Error: $error';
+          _isAnalyzing = false;
+        });
+      },
+      onDone: () {
+        Logger.d('ScannerScreen', 'Stream done');
+        setState(() {
+          _isAnalyzing = false;
+        });
+      },
+    );
   }
 
   void _resetAnalysis() {

@@ -21,8 +21,8 @@ class MultimodalContent with _$MultimodalContent {
   const factory MultimodalContent({
     required String type,
     String? text,
-    String? fileId,
-    String? fileUrl,
+    @JsonKey(name: 'file_id') String? fileId,
+    @JsonKey(name: 'file_url') String? fileUrl,
   }) = _MultimodalContent;
 
   factory MultimodalContent.fromJson(Map<String, dynamic> json) =>

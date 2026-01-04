@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:subtext/data/models/ai_response.dart';
 import 'package:subtext/data/models/chat_message.dart';
@@ -45,6 +46,50 @@ class ChatRepository {
       type: 'question',
     );
 
+    return _chatApi.sendChatMessage(
+      botId: botId,
+      userId: userId,
+      messages: [message],
+      stream: stream,
+      conversationId: conversationId,
+      autoSaveHistory: autoSaveHistory,
+    );
+  }
+
+  /// 发送图片消息
+  Stream<AIResponse> sendImageMessage({
+    required String botId,
+    required String userId,
+    required String fileId,
+    bool stream = true,
+    String? conversationId,
+    bool autoSaveHistory = true,
+  }) {
+    // 创建多模态内容对象
+    final imageContent = MultimodalContent(
+      type: 'image',
+      text: null,
+      fileId: fileId,
+      fileUrl: null,
+    );
+
+    // 构建多模态内容列表
+    final multimodalContentList = [imageContent];
+
+    // 将多模态内容列表转换为JSON字符串
+    final contentJson = jsonEncode(
+      multimodalContentList.map((item) => item.toJson()).toList(),
+    );
+
+    // 创建聊天消息
+    final message = ChatMessage(
+      content: contentJson,
+      contentType: 'object_string',
+      role: 'user',
+      type: 'question',
+    );
+
+    // 发送消息
     return _chatApi.sendChatMessage(
       botId: botId,
       userId: userId,
