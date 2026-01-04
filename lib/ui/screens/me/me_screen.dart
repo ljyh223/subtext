@@ -12,7 +12,6 @@ import 'package:subtext/ui/screens/me/settings/help_support_screen.dart';
 import 'package:subtext/ui/screens/me/settings/language_screen.dart';
 import 'package:subtext/ui/screens/me/settings/notifications_screen.dart';
 import 'package:subtext/ui/screens/me/settings/privacy_security_screen.dart';
-import 'package:subtext/ui/screens/test/test_screen.dart';
 
 class MeScreen extends ConsumerWidget {
   const MeScreen({super.key});
@@ -519,19 +518,7 @@ class MeScreen extends ConsumerWidget {
                     ),
                   );
                 },
-              ),
-              _buildDivider(),
-              _buildSettingItem(
-                context: context,
-                icon: Icons.developer_mode_outlined,
-                title: 'API测试',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TestScreen()),
-                  );
-                },
-              ),
+              )
             ],
           ),
         ),

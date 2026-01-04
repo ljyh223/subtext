@@ -127,7 +127,6 @@ class ArsenalListScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           color: AppTheme.white,
           border: Border.all(color: AppTheme.stone200, width: 1),
-          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),

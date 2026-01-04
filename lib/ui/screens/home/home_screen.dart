@@ -1,14 +1,65 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
 import 'package:subtext/providers/nav_provider.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late String formattedDate;
+  late DateTime currentDate;
+  late Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    // 获取当前时间并格式化
+    updateCurrentDate();
+    // 每分钟更新一次时间
+    timer = Timer.periodic(
+      const Duration(minutes: 1),
+      (Timer t) => updateCurrentDate(),
+    );
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  // 更新当前日期和时间
+  void updateCurrentDate() {
+    setState(() {
+      currentDate = DateTime.now();
+      formattedDate = formatDate(currentDate);
+    });
+  }
+
+  // 格式化日期为中文格式，例如："星期五, 1月2日"
+  String formatDate(DateTime date) {
+    // 中文星期几
+    const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    // date.weekday 返回1-7，其中7代表星期日，需要转换为0-6的索引
+    int weekdayIndex = date.weekday % 7;
+    String weekday = weekdays[weekdayIndex];
+
+    // 月份和日期
+    int month = date.month;
+    int day = date.day;
+
+    return '$weekday, $month月$day日';
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appState = ref.watch(appStateProvider);
     final appStateNotifier = ref.read(appStateProvider.notifier);
 
@@ -46,7 +97,7 @@ class HomeScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '星期五, 1月2日',
+          formattedDate,
           style: GoogleFonts.inter(
             fontSize: 10,
             fontWeight: FontWeight.w700,
