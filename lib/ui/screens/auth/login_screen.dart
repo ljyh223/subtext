@@ -7,7 +7,9 @@ import 'package:subtext/ui/screens/auth/register_screen.dart';
 import 'package:subtext/ui/screens/auth/server_config_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, this.onLoginSuccess});
+
+  final void Function()? onLoginSuccess;
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -52,6 +54,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             backgroundColor: AppTheme.burntOrange,
           ),
         );
+        // 调用登录成功回调
+        if (widget.onLoginSuccess != null) {
+          widget.onLoginSuccess!();
+        }
         // 这里可以添加导航逻辑，例如返回上一页或导航到主界面
         Navigator.pop(context);
       }

@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:subtext/data/models/arsenal.dart';
 import 'package:subtext/data/repositories/arsenal_repository.dart';
 import 'package:subtext/data/sources/arsenal_api.dart';
+
+part 'arsenal_providers.freezed.dart';
 
 // Arsenal API Provider
 final arsenalApiProvider = Provider<ArsenalApi>((ref) {
@@ -15,32 +18,14 @@ final arsenalRepositoryProvider = Provider<ArsenalRepository>((ref) {
 });
 
 // Arsenal State
-class ArsenalState {
-  final List<Arsenal> arsenalList;
-  final Arsenal? selectedArsenal;
-  final bool isLoading;
-  final String? error;
-
-  const ArsenalState({
-    this.arsenalList = const [],
-    this.selectedArsenal,
-    this.isLoading = false,
-    this.error,
-  });
-
-  ArsenalState copyWith({
-    List<Arsenal>? arsenalList,
+@freezed
+class ArsenalState with _$ArsenalState {
+  const factory ArsenalState({
+    @Default([]) List<Arsenal> arsenalList,
     Arsenal? selectedArsenal,
-    bool? isLoading,
+    @Default(false) bool isLoading,
     String? error,
-  }) {
-    return ArsenalState(
-      arsenalList: arsenalList ?? this.arsenalList,
-      selectedArsenal: selectedArsenal ?? this.selectedArsenal,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-    );
-  }
+  }) = _ArsenalState;
 }
 
 // Arsenal Notifier
@@ -72,21 +57,10 @@ class ArsenalNotifier extends Notifier<ArsenalState> {
   Future<void> fetchArsenalByCategory(String category) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      final arsenalList = await _arsenalRepository.getArsenalByCategory(category);
+      final arsenalList = await _arsenalRepository.getArsenalByCategory(
+        category,
+      );
       state = state.copyWith(arsenalList: arsenalList, isLoading: false);
-    } catch (e) {
-      state = state.copyWith(error: e.toString(), isLoading: false);
-    }
-  }
-
-  /// 根据id获取单个锦囊条目
-  Future<void> fetchArsenalById(int id) async {
-    state = state.copyWith(isLoading: true, error: null);
-    try {
-      final arsenal = await _arsenalRepository.getArsenalById(id);
-      state = state.copyWith(selectedArsenal: arsenal, isLoading: false);
-      // 增加使用次数
-      await _arsenalRepository.incrementUsageCount(id);
     } catch (e) {
       state = state.copyWith(error: e.toString(), isLoading: false);
     }
@@ -95,5 +69,20 @@ class ArsenalNotifier extends Notifier<ArsenalState> {
   /// 清除选中的锦囊条目
   void clearSelectedArsenal() {
     state = state.copyWith(selectedArsenal: null);
+  }
+
+  /// 根据id获取单个锦囊条目
+  Future<void> fetchArsenalById(int id) async {
+    state = state.copyWith(isLoading: true, error: null, selectedArsenal: null);
+    try {
+      final arsenal = await _arsenalRepository.getArsenalById(id);
+      state = state.copyWith(selectedArsenal: arsenal, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(
+        error: e.toString(),
+        isLoading: false,
+        selectedArsenal: null,
+      );
+    }
   }
 }

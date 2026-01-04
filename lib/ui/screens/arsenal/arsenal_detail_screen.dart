@@ -156,33 +156,6 @@ class ArsenalDetailScreen extends ConsumerWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
-        // 统计信息
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: AppTheme.white,
-            border: Border.all(color: AppTheme.stone200, width: 1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // 使用次数
-              _buildStatItem('使用次数', '${arsenal.usageCount}'),
-              // 创建时间
-              _buildStatItem(
-                '创建时间',
-                '${arsenal.createdAt.year}-${arsenal.createdAt.month}-${arsenal.createdAt.day}',
-              ),
-              // 更新时间
-              _buildStatItem(
-                '更新时间',
-                '${arsenal.updatedAt.year}-${arsenal.updatedAt.month}-${arsenal.updatedAt.day}',
-              ),
-            ],
-          ),
-        ),
         const SizedBox(height: 32),
         // 底部操作按钮
         SizedBox(
@@ -206,30 +179,6 @@ class ArsenalDetailScreen extends ConsumerWidget {
                 color: AppTheme.white,
               ),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatItem(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            color: AppTheme.black,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-            color: AppTheme.stone500,
           ),
         ),
       ],

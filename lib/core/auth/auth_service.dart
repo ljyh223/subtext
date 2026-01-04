@@ -1,18 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:subtext/core/config/server_config_storage.dart';
+import 'package:subtext/core/network/dio_manager.dart';
 import 'package:subtext/core/utils/logger.dart';
 
 class AuthService {
   final Dio _dio;
   final ServerConfigStorage _configStorage;
 
-  AuthService() : _configStorage = ServerConfigStorage(), _dio = Dio();
+  AuthService()
+    : _configStorage = ServerConfigStorage(),
+      _dio = DioManager.instance.dio;
 
   Future<void> _initDio() async {
-    final config = await _configStorage.loadConfig();
-    if (config != null) {
-      _dio.options.baseUrl = config.baseUrl;
-    }
+    await DioManager.instance.init();
   }
 
   /// 用户注册
@@ -22,7 +22,7 @@ class AuthService {
 
       final response = await _dio.post(
         '/auth/register',
-        data: {'email': email, 'password': password, 'nickname': nickname},
+        data: {'email': email, 'password': password, 'full_name': nickname},
       );
 
       Logger.d('AuthService', 'Sign up successful: ${response.data}');
@@ -45,7 +45,7 @@ class AuthService {
       Logger.d('AuthService', 'Sign in successful: ${response.data}');
 
       final token = response.data['access_token'] as String;
-      await _configStorage.saveToken(token);
+      await DioManager.instance.updateToken(token);
 
       return response.data;
     } catch (e) {
@@ -64,13 +64,14 @@ class AuthService {
         return null;
       }
 
-      _dio.options.headers['Authorization'] = 'Bearer $token';
-      final response = await _dio.get('/auth/me');
+      final response = await _dio.get('/users/me');
 
       Logger.d('AuthService', 'Get current user successful: ${response.data}');
       return response.data;
     } catch (e) {
       Logger.e('AuthService', 'Get current user failed: $e', e);
+      // 清除无效token
+      await _configStorage.clearToken();
       return null;
     }
   }
@@ -82,11 +83,10 @@ class AuthService {
       final token = await _configStorage.getToken();
 
       if (token != null && token.isNotEmpty) {
-        _dio.options.headers['Authorization'] = 'Bearer $token';
         await _dio.post('/auth/logout');
       }
 
-      await _configStorage.clearToken();
+      await DioManager.instance.clearToken();
 
       Logger.d('AuthService', 'Sign out successful');
     } catch (e) {

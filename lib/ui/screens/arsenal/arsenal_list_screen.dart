@@ -79,9 +79,7 @@ class ArsenalListScreen extends ConsumerWidget {
               ]
               // 空状态
               else if (arsenalState.arsenalList.isEmpty) ...[
-                const Center(
-                  child: Text('暂无锦囊条目'),
-                ),
+                const Center(child: Text('暂无锦囊条目')),
               ]
               // 列表状态
               else ...[
@@ -94,7 +92,11 @@ class ArsenalListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildArsenalGrid(List<Arsenal> arsenalList, BuildContext context, WidgetRef ref) {
+  Widget _buildArsenalGrid(
+    List<Arsenal> arsenalList,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -112,7 +114,11 @@ class ArsenalListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildArsenalCard(Arsenal arsenal, BuildContext context, WidgetRef ref) {
+  Widget _buildArsenalCard(
+    Arsenal arsenal,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     return GestureDetector(
       onTap: () {
         // 导航到详情页
@@ -160,7 +166,9 @@ class ArsenalListScreen extends ConsumerWidget {
             GestureDetector(
               onTap: () {
                 // 点击标题时，根据category筛选锦囊
-                final arsenalNotifier = ref.read(arsenalNotifierProvider.notifier);
+                final arsenalNotifier = ref.read(
+                  arsenalNotifierProvider.notifier,
+                );
                 arsenalNotifier.fetchArsenalByCategory(arsenal.category);
               },
               child: Text(
@@ -189,7 +197,10 @@ class ArsenalListScreen extends ConsumerWidget {
                   final tag = arsenal.tags[index];
                   return Container(
                     margin: const EdgeInsets.only(right: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppTheme.stone100,
                       borderRadius: BorderRadius.circular(10),
@@ -205,29 +216,6 @@ class ArsenalListScreen extends ConsumerWidget {
                   );
                 },
               ),
-            ),
-            const Spacer(),
-            // 使用次数
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '使用次数',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppTheme.stone500,
-                  ),
-                ),
-                Text(
-                  '${arsenal.usageCount}',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.black,
-                  ),
-                ),
-              ],
             ),
           ],
         ),
