@@ -1,18 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/ai_response.dart';
 import 'package:subtext/data/models/chat_message.dart';
 import 'package:subtext/data/repositories/chat_repository.dart';
 import 'package:subtext/data/sources/chat_api.dart';
 
-// Chat API Provider
+// Chat API Provider - Coze API continues to use its own token
 final chatApiProvider = Provider<ChatApi>((ref) {
-  // 从Supabase获取当前登录用户的token
-  final session = Supabase.instance.client.auth.currentSession;
-  final token = session?.accessToken ?? '';
+  // Coze API token remains unchanged as requested by user
+  final token = "pat_Sm4IiE8ESCB35wzmNzLllYeZ5VzPMmq5W8ks7pNbPs2e2IB6wYY0pKYmlZbG7jth";
   return ChatApi(token: token);
 });
 

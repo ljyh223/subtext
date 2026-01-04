@@ -18,7 +18,7 @@ class MeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+    final currentUser = ref.watch(currentUserProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -29,7 +29,7 @@ class MeScreen extends ConsumerWidget {
           _buildHeader(),
           const SizedBox(height: 24),
 
-          authState.when(
+          currentUser.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => _buildErrorState(context),
             data: (user) {
@@ -412,7 +412,7 @@ class MeScreen extends ConsumerWidget {
   Widget _buildSettingsSection(
     BuildContext context,
     WidgetRef ref,
-    dynamic user,
+    Map<String, dynamic> user,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -518,7 +518,7 @@ class MeScreen extends ConsumerWidget {
                     ),
                   );
                 },
-              )
+              ),
             ],
           ),
         ),

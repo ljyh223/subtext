@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/auth/auth_service.dart';
 import 'package:subtext/core/theme/app_theme.dart';
 import 'package:subtext/ui/screens/auth/register_screen.dart';
+import 'package:subtext/ui/screens/auth/server_config_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -84,6 +85,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            color: AppTheme.black,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ServerConfigScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
