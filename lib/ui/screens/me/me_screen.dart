@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
+import 'package:subtext/ui/screens/me/settings/about_screen.dart';
+import 'package:subtext/ui/screens/me/settings/appearance_screen.dart';
+import 'package:subtext/ui/screens/me/settings/help_support_screen.dart';
+import 'package:subtext/ui/screens/me/settings/language_screen.dart';
+import 'package:subtext/ui/screens/me/settings/notifications_screen.dart';
+import 'package:subtext/ui/screens/me/settings/privacy_security_screen.dart';
 import 'package:subtext/ui/screens/test/test_screen.dart';
 
 class MeScreen extends StatelessWidget {
@@ -251,42 +257,84 @@ class MeScreen extends StatelessWidget {
                 context: context,
                 icon: Icons.privacy_tip_outlined,
                 title: '隐私与安全',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PrivacySecurityScreen(),
+                    ),
+                  );
+                },
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.notifications_outlined,
                 title: '通知设置',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationsScreen(),
+                    ),
+                  );
+                },
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.palette_outlined,
                 title: '外观设置',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AppearanceScreen(),
+                    ),
+                  );
+                },
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.language_outlined,
                 title: '语言设置',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LanguageScreen(),
+                    ),
+                  );
+                },
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.help_outline,
                 title: '帮助与支持',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HelpSupportScreen(),
+                    ),
+                  );
+                },
               ),
               _buildDivider(),
               _buildSettingItem(
                 context: context,
                 icon: Icons.info_outline,
                 title: '关于',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutScreen(),
+                    ),
+                  );
+                },
               ),
               _buildDivider(),
               _buildSettingItem(
