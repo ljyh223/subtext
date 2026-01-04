@@ -485,6 +485,7 @@ class HelpSupportScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildHelpResource({
     required IconData icon,
     required String title,
@@ -500,10 +501,8 @@ class HelpSupportScreen extends StatelessWidget {
           border: Border.all(color: AppTheme.stone200, width: 1),
           borderRadius: BorderRadius.circular(8),
         ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(12),
+        child: Row(
           children: [
             Container(
               width: 40,
@@ -516,33 +515,41 @@ class HelpSupportScreen extends StatelessWidget {
                 child: Icon(icon, size: 20, color: AppTheme.stone500),
               ),
             ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppTheme.black,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppTheme.black,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    description,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppTheme.stone600,
+                      height: 1.4,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              description,
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: AppTheme.stone600,
-                height: 1.4,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            Icon(Icons.chevron_right, size: 20, color: AppTheme.stone400),
           ],
         ),
       ),
     );
   }
-
 
   Widget _buildDivider() {
     return Container(
