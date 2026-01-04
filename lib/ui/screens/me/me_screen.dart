@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:subtext/core/auth/auth_service.dart';
 import 'package:subtext/core/theme/app_theme.dart';
+import 'package:subtext/providers/auth_provider.dart';
+import 'package:subtext/ui/screens/auth/login_screen.dart';
+import 'package:subtext/ui/screens/auth/register_screen.dart';
 import 'package:subtext/ui/screens/me/settings/about_screen.dart';
 import 'package:subtext/ui/screens/me/settings/appearance_screen.dart';
 import 'package:subtext/ui/screens/me/settings/help_support_screen.dart';
@@ -9,11 +14,13 @@ import 'package:subtext/ui/screens/me/settings/notifications_screen.dart';
 import 'package:subtext/ui/screens/me/settings/privacy_security_screen.dart';
 import 'package:subtext/ui/screens/test/test_screen.dart';
 
-class MeScreen extends StatelessWidget {
+class MeScreen extends ConsumerWidget {
   const MeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -22,19 +29,192 @@ class MeScreen extends StatelessWidget {
           // Header
           _buildHeader(),
           const SizedBox(height: 24),
-          // User Profile
-          _buildUserProfile(),
+
+          authState.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => _buildErrorState(context),
+            data: (user) {
+              if (user == null) {
+                return _buildLoginState(context);
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // User Profile
+                    _buildUserProfile(),
+                    const SizedBox(height: 24),
+                    // Quick Stats
+                    _buildQuickStats(),
+                    const SizedBox(height: 24),
+                    // Settings Sections
+                    _buildSettingsSection(context, ref, user),
+                    const SizedBox(height: 24),
+                    // About Section
+                    _buildAboutSection(),
+                    // Add bottom padding to account for navigation bar
+                    const SizedBox(height: 24),
+                  ],
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          Text(
+            '加载失败，请重试',
+            style: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppTheme.stone600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              // 重新加载页面
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const MeScreen()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.burntOrange,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              '重试',
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoginState(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.white,
+        border: Border.all(color: AppTheme.stone200, width: 1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // 应用图标
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: AppTheme.stone100,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.speaker_notes_outlined,
+                size: 40,
+                color: AppTheme.burntOrange,
+              ),
+            ),
+          ),
           const SizedBox(height: 24),
-          // Quick Stats
-          _buildQuickStats(),
-          const SizedBox(height: 24),
-          // Settings Sections
-          _buildSettingsSection(context),
-          const SizedBox(height: 24),
-          // About Section
-          _buildAboutSection(),
-          // Add bottom padding to account for navigation bar
-          const SizedBox(height: 24),
+
+          // 标题
+          Text(
+            '欢迎使用Subtext',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+              color: AppTheme.black,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // 描述
+          Text(
+            '登录或注册以使用所有功能',
+            style: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: AppTheme.stone600,
+            ),
+          ),
+          const SizedBox(height: 32),
+
+          // 登录按钮
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.burntOrange,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                '登录',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // 注册按钮
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RegisterScreen(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: BorderSide(color: AppTheme.stone300, width: 1),
+                ),
+              ),
+              child: Text(
+                '注册',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.black,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -230,7 +410,11 @@ class MeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsSection(BuildContext context) {
+  Widget _buildSettingsSection(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic user,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -378,7 +562,9 @@ class MeScreen extends StatelessWidget {
                 context: context,
                 icon: Icons.switch_account_outlined,
                 title: '切换账户',
-                onTap: () {},
+                onTap: () {
+                  // 切换账户逻辑
+                },
               ),
               _buildDivider(),
               _buildSettingItem(
@@ -386,7 +572,10 @@ class MeScreen extends StatelessWidget {
                 icon: Icons.logout_outlined,
                 title: '退出登录',
                 titleColor: AppTheme.burntOrange,
-                onTap: () {},
+                onTap: () async {
+                  final authService = AuthService();
+                  await authService.signOut();
+                },
               ),
             ],
           ),
