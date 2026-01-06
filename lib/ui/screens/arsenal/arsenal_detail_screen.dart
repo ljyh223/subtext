@@ -29,7 +29,7 @@ class ArsenalDetailScreen extends ConsumerWidget {
         backgroundColor: AppTheme.paperWhite,
         surfaceTintColor: Colors.transparent,
         title: Text(
-          '武器详情',
+          '锦囊详情',
           style: GoogleFonts.playfairDisplay(
             fontSize: 20,
             fontWeight: FontWeight.w900,

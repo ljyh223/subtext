@@ -15,18 +15,10 @@ class _AuthGuardState extends ConsumerState<AuthGuard> {
   @override
   void initState() {
     super.initState();
-    // 初始加载用户信息
-    _loadUserInfo();
-  }
-
-  void _loadUserInfo() {
-    // 使用refresh来重新加载FutureProvider
-    ref.refresh(currentUserProvider);
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetRef ref = super.ref;
     final currentUser = ref.watch(currentUserProvider);
 
     return currentUser.when(
@@ -34,7 +26,12 @@ class _AuthGuardState extends ConsumerState<AuthGuard> {
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       // 错误状态，显示登录界面
-      error: (error, stack) => const LoginScreen(),
+      error: (error, stack) => LoginScreen(
+        onLoginSuccess: () {
+          // 登录成功后刷新currentUserProvider，获取最新用户信息
+          ref.refresh(currentUserProvider); // ignore: unused_result
+        },
+      ),
       // 数据状态
       data: (user) {
         // 如果用户已登录，显示主界面
@@ -44,8 +41,8 @@ class _AuthGuardState extends ConsumerState<AuthGuard> {
         // 否则显示登录界面
         return LoginScreen(
           onLoginSuccess: () {
-            // 登录成功后重新加载用户信息
-            _loadUserInfo();
+            // 登录成功后刷新currentUserProvider，获取最新用户信息
+            ref.refresh(currentUserProvider); // ignore: unused_result
           },
         );
       },

@@ -49,7 +49,7 @@ class DioManager {
     // 而是确保在需要时已经初始化
     return _dio;
   }
-  
+
   /// 确保Dio实例已初始化
   Future<void> ensureInitialized() async {
     await init();
@@ -58,28 +58,36 @@ class DioManager {
   /// 设置拦截器
   void _setupInterceptors() {
     // 请求拦截器
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        Logger.d('DioManager', 'Request: ${options.method} ${options.uri}');
-        Logger.d('DioManager', 'Headers: ${options.headers}');
-        if (options.data != null) {
-          Logger.d('DioManager', 'Data: ${options.data}');
-        }
-        return handler.next(options);
-      },
-      onResponse: (response, handler) {
-        Logger.d('DioManager', 'Response: ${response.statusCode} ${response.requestOptions.uri}');
-        Logger.d('DioManager', 'Data: ${response.data}');
-        return handler.next(response);
-      },
-      onError: (DioException e, handler) {
-        Logger.e('DioManager', 'Error: ${e.response?.statusCode} ${e.requestOptions.uri}');
-        Logger.e('DioManager', 'Error message: ${e.message}');
-        if (e.response != null) {
-          Logger.e('DioManager', 'Error data: ${e.response?.data}');
-        }
-        return handler.next(e);
-      },
-    ));
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          Logger.d('DioManager', 'Request: ${options.method} ${options.uri}');
+          Logger.d('DioManager', 'Headers: ${options.headers}');
+          if (options.data != null) {
+            Logger.d('DioManager', 'Data: ${options.data}');
+          }
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          Logger.d(
+            'DioManager',
+            'Response: ${response.statusCode} ${response.requestOptions.uri}',
+          );
+          Logger.d('DioManager', 'Data: ${response.data}');
+          return handler.next(response);
+        },
+        onError: (DioException e, handler) {
+          Logger.e(
+            'DioManager',
+            'Error: ${e.response?.statusCode} ${e.requestOptions.uri}',
+          );
+          Logger.e('DioManager', 'Error message: ${e.message}');
+          if (e.response != null) {
+            Logger.e('DioManager', 'Error data: ${e.response?.data}');
+          }
+          return handler.next(e);
+        },
+      ),
+    );
   }
 }

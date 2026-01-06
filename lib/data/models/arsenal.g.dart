@@ -8,7 +8,7 @@ part of 'arsenal.dart';
 
 _$ArsenalImpl _$$ArsenalImplFromJson(Map<String, dynamic> json) =>
     _$ArsenalImpl(
-      id: (json['id'] as num).toInt(),
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String,
       content: json['content'] as String,
       category: json['category'] as String,

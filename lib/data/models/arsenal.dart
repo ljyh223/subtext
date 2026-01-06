@@ -6,7 +6,7 @@ part 'arsenal.g.dart';
 @freezed
 class Arsenal with _$Arsenal {
   factory Arsenal({
-    required int id,
+    int? id,
     required String title,
     required String content,
     required String category,

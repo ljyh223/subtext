@@ -121,13 +121,15 @@ class ArsenalListScreen extends ConsumerWidget {
   ) {
     return GestureDetector(
       onTap: () {
-        // 导航到详情页
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ArsenalDetailScreen(arsenalId: arsenal.id),
-          ),
-        );
+        // 导航到详情页，确保id不为null
+        if (arsenal.id != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ArsenalDetailScreen(arsenalId: arsenal.id!),
+            ),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(

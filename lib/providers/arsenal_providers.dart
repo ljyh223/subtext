@@ -78,11 +78,7 @@ class ArsenalNotifier extends Notifier<ArsenalState> {
       final arsenal = await _arsenalRepository.getArsenalById(id);
       state = state.copyWith(selectedArsenal: arsenal, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        error: e.toString(),
-        isLoading: false,
-        selectedArsenal: null,
-      );
+      state = state.copyWith(error: e.toString(), isLoading: false, selectedArsenal: null);
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,7 +48,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
 
       if (mounted) {
-        // 登录成功，导航到主界面或其他适当的界面
+        // 登录成功，显示提示信息
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('登录成功！欢迎回来，${userProfile?['name'] ?? '用户'}'),
@@ -58,13 +59,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         if (widget.onLoginSuccess != null) {
           widget.onLoginSuccess!();
         }
-        // 这里可以添加导航逻辑，例如返回上一页或导航到主界面
-        Navigator.pop(context);
+        // 不需要手动导航，AuthGuard会根据currentUserProvider的状态自动更新
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString();
+          // 解析错误信息，获取detail字段
+          String errorMsg = '登录失败，请检查您的邮箱和密码';
+          if (e is DioException) {
+            if (e.response != null && e.response?.data != null) {
+              final responseData = e.response!.data;
+              if (responseData is Map && responseData.containsKey('detail')) {
+                errorMsg = responseData['detail'] as String;
+              }
+            }
+          }
+          _errorMessage = errorMsg;
         });
       }
     } finally {

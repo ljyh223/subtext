@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/ai_response.dart';
 import 'package:subtext/data/models/chat_message.dart';
+import 'package:subtext/data/models/workflow.dart';
 
 class ChatApi {
   final Dio _dio;

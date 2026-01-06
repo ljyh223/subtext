@@ -21,7 +21,7 @@ Arsenal _$ArsenalFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Arsenal {
-  int get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
@@ -43,7 +43,7 @@ abstract class $ArsenalCopyWith<$Res> {
       _$ArsenalCopyWithImpl<$Res, Arsenal>;
   @useResult
   $Res call({
-    int id,
+    int? id,
     String title,
     String content,
     String category,
@@ -66,7 +66,7 @@ class _$ArsenalCopyWithImpl<$Res, $Val extends Arsenal>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? title = null,
     Object? content = null,
     Object? category = null,
@@ -74,10 +74,10 @@ class _$ArsenalCopyWithImpl<$Res, $Val extends Arsenal>
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
+            id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as int,
+                      as int?,
             title: null == title
                 ? _value.title
                 : title // ignore: cast_nullable_to_non_nullable
@@ -109,7 +109,7 @@ abstract class _$$ArsenalImplCopyWith<$Res> implements $ArsenalCopyWith<$Res> {
   @override
   @useResult
   $Res call({
-    int id,
+    int? id,
     String title,
     String content,
     String category,
@@ -131,7 +131,7 @@ class __$$ArsenalImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? title = null,
     Object? content = null,
     Object? category = null,
@@ -139,10 +139,10 @@ class __$$ArsenalImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$ArsenalImpl(
-        id: null == id
+        id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as int,
+                  as int?,
         title: null == title
             ? _value.title
             : title // ignore: cast_nullable_to_non_nullable
@@ -168,7 +168,7 @@ class __$$ArsenalImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ArsenalImpl implements _Arsenal {
   _$ArsenalImpl({
-    required this.id,
+    this.id,
     required this.title,
     required this.content,
     required this.category,
@@ -179,7 +179,7 @@ class _$ArsenalImpl implements _Arsenal {
       _$$ArsenalImplFromJson(json);
 
   @override
-  final int id;
+  final int? id;
   @override
   final String title;
   @override
@@ -240,7 +240,7 @@ class _$ArsenalImpl implements _Arsenal {
 
 abstract class _Arsenal implements Arsenal {
   factory _Arsenal({
-    required final int id,
+    final int? id,
     required final String title,
     required final String content,
     required final String category,
@@ -250,7 +250,7 @@ abstract class _Arsenal implements Arsenal {
   factory _Arsenal.fromJson(Map<String, dynamic> json) = _$ArsenalImpl.fromJson;
 
   @override
-  int get id;
+  int? get id;
   @override
   String get title;
   @override

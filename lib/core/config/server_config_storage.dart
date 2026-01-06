@@ -4,6 +4,8 @@ import 'package:subtext/core/config/server_config.dart';
 class ServerConfigStorage {
   static const _kServerConfigKey = 'server_config';
   static const _kTokenKey = 'auth_token';
+  static const _kHostHistoryKey = 'host_history';
+  static const _kMaxHistoryItems = 5;
 
   /// 保存服务端配置
   Future<void> saveConfig(ServerConfig config) async {
@@ -20,6 +22,39 @@ class ServerConfigStorage {
       return ServerConfig(baseUrl: baseUrl);
     }
     return null;
+  }
+
+  /// 保存主机地址到历史记录
+  Future<void> saveHostToHistory(String host) async {
+    if (host.isEmpty) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final history = await getHostHistory();
+
+    // 移除重复项
+    history.removeWhere((item) => item == host);
+
+    // 添加到开头
+    history.insert(0, host);
+
+    // 限制历史记录数量
+    if (history.length > _kMaxHistoryItems) {
+      history.removeRange(_kMaxHistoryItems, history.length);
+    }
+
+    await prefs.setStringList(_kHostHistoryKey, history);
+  }
+
+  /// 获取主机地址历史记录
+  Future<List<String>> getHostHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(_kHostHistoryKey) ?? [];
+  }
+
+  /// 清除主机地址历史记录
+  Future<void> clearHostHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_kHostHistoryKey);
   }
 
   /// 清除服务端配置

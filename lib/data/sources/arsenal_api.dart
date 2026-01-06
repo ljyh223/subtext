@@ -7,7 +7,7 @@ class ArsenalApi {
   final Dio _dio;
   final DioManager _dioManager;
 
-  ArsenalApi()
+  ArsenalApi() 
     : _dioManager = DioManager.instance,
       _dio = DioManager.instance.dio;
 
