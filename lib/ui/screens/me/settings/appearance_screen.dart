@@ -208,23 +208,26 @@ class AppearanceScreen extends StatelessWidget {
 
   Widget _buildThemeOption(String title, bool isSelected) {
     return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: isSelected ? AppTheme.stone100 : AppTheme.white,
-          border: Border.all(
-            color: isSelected ? AppTheme.burntOrange : AppTheme.stone200,
-            width: 1,
+      child: GestureDetector(
+        onTap: () {},
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.stone100 : AppTheme.white,
+            border: Border.all(
+              color: isSelected ? AppTheme.burntOrange : AppTheme.stone200,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
           ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Center(
-          child: Text(
-            title,
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              color: isSelected ? AppTheme.burntOrange : AppTheme.black,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Center(
+            child: Text(
+              title,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                color: isSelected ? AppTheme.burntOrange : AppTheme.black,
+              ),
             ),
           ),
         ),

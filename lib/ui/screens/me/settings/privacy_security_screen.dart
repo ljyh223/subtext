@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
 
-class PrivacySecurityScreen extends StatelessWidget {
+class PrivacySecurityScreen extends StatefulWidget {
   const PrivacySecurityScreen({super.key});
+
+  @override
+  State<PrivacySecurityScreen> createState() => _PrivacySecurityScreenState();
+}
+
+class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
+  bool _twoFactorEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +91,12 @@ class PrivacySecurityScreen extends StatelessWidget {
                 title: '双重验证',
                 description: '开启或关闭双重验证',
                 trailing: Switch(
-                  value: false,
-                  onChanged: (value) {},
+                  value: _twoFactorEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      _twoFactorEnabled = value;
+                    });
+                  },
                   activeThumbColor: AppTheme.burntOrange,
                   activeTrackColor: AppTheme.burntOrange.withOpacity(0.5),
                 ),

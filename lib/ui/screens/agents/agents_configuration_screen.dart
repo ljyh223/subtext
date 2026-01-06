@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
 
-class AgentsConfigurationScreen extends StatelessWidget {
+class AgentsConfigurationScreen extends StatefulWidget {
   const AgentsConfigurationScreen({super.key});
+
+  @override
+  State<AgentsConfigurationScreen> createState() =>
+      _AgentsConfigurationScreenState();
+}
+
+class _AgentsConfigurationScreenState extends State<AgentsConfigurationScreen> {
+  bool _strategistActive = true;
+  bool _empathizerActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +42,38 @@ class AgentsConfigurationScreen extends StatelessWidget {
                   title: '战略家',
                   subtitle: '核心智能助手',
                   description: '分析利益冲突，提供博弈论视角的回复建议。',
-                  isActive: true,
+                  isActive: _strategistActive,
                   icon: Icons.trending_up,
-                  iconBackgroundColor: AppTheme.burntOrange.withOpacity(0.1),
-                  iconColor: AppTheme.burntOrange,
+                  iconBackgroundColor: _strategistActive
+                      ? AppTheme.burntOrange.withValues(alpha: 0.1)
+                      : AppTheme.stone200,
+                  iconColor: _strategistActive
+                      ? AppTheme.burntOrange
+                      : AppTheme.stone500,
+                  onToggle: (value) {
+                    setState(() {
+                      _strategistActive = value;
+                    });
+                  },
                 ),
                 const SizedBox(height: 16),
                 _buildAgentCard(
                   title: '共情者',
                   subtitle: '心理学',
                   description: '分析情感潜台词，识别微情绪变化。',
-                  isActive: false,
+                  isActive: _empathizerActive,
                   icon: Icons.psychology,
-                  iconBackgroundColor: AppTheme.stone200,
-                  iconColor: AppTheme.stone500,
+                  iconBackgroundColor: _empathizerActive
+                      ? AppTheme.burntOrange.withValues(alpha: 0.1)
+                      : AppTheme.stone200,
+                  iconColor: _empathizerActive
+                      ? AppTheme.burntOrange
+                      : AppTheme.stone500,
+                  onToggle: (value) {
+                    setState(() {
+                      _empathizerActive = value;
+                    });
+                  },
                 ),
               ],
             ),
@@ -64,6 +91,7 @@ class AgentsConfigurationScreen extends StatelessWidget {
     required IconData icon,
     required Color iconBackgroundColor,
     required Color iconColor,
+    required Function(bool) onToggle,
   }) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -129,27 +157,13 @@ class AgentsConfigurationScreen extends StatelessWidget {
             ],
           ),
           // Toggle Switch
-          Container(
-            width: 40,
-            height: 20,
-            decoration: BoxDecoration(
-              color: isActive ? AppTheme.black : AppTheme.stone300,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Align(
-              alignment: isActive
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft,
-              child: Container(
-                width: 12,
-                height: 12,
-                margin: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  color: AppTheme.white,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
+          Switch(
+            value: isActive,
+            onChanged: onToggle,
+            activeThumbColor: AppTheme.black,
+            inactiveThumbColor: AppTheme.white,
+            inactiveTrackColor: AppTheme.stone300,
+            trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
           ),
         ],
       ),

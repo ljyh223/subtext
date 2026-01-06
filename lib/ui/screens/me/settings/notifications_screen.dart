@@ -2,8 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
+
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  bool _allowNotifications = true;
+  bool _newMessageNotifications = true;
+  bool _analysisResultNotifications = true;
+  bool _systemNotifications = true;
+  bool _marketingNotifications = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +65,12 @@ class NotificationsScreen extends StatelessWidget {
               _buildToggleSetting(
                 title: '允许通知',
                 description: '开启或关闭所有通知',
-                value: true,
-                onChanged: (value) {},
+                value: _allowNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _allowNotifications = value;
+                  });
+                },
               ),
               const SizedBox(height: 24),
 
@@ -65,29 +80,45 @@ class NotificationsScreen extends StatelessWidget {
               _buildToggleSetting(
                 title: '新消息通知',
                 description: '接收新消息的通知',
-                value: true,
-                onChanged: (value) {},
+                value: _newMessageNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _newMessageNotifications = value;
+                  });
+                },
               ),
               const SizedBox(height: 12),
               _buildToggleSetting(
                 title: '分析结果通知',
                 description: '接收分析结果的通知',
-                value: true,
-                onChanged: (value) {},
+                value: _analysisResultNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _analysisResultNotifications = value;
+                  });
+                },
               ),
               const SizedBox(height: 12),
               _buildToggleSetting(
                 title: '系统通知',
                 description: '接收系统通知',
-                value: true,
-                onChanged: (value) {},
+                value: _systemNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _systemNotifications = value;
+                  });
+                },
               ),
               const SizedBox(height: 12),
               _buildToggleSetting(
                 title: '营销通知',
                 description: '接收产品营销相关通知',
-                value: false,
-                onChanged: (value) {},
+                value: _marketingNotifications,
+                onChanged: (value) {
+                  setState(() {
+                    _marketingNotifications = value;
+                  });
+                },
               ),
               const SizedBox(height: 24),
 

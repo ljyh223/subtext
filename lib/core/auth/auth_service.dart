@@ -46,6 +46,7 @@ class AuthService {
 
       final token = response.data['access_token'] as String;
       await DioManager.instance.updateToken(token);
+      await _configStorage.saveToken(token);
 
       return response.data;
     } catch (e) {
