@@ -89,74 +89,60 @@ class _AnalysisDetailScreenState extends ConsumerState<AnalysisDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                '创建时间',
-                style: GoogleFonts.inter(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.2,
-                  color: AppTheme.stone400,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                _formatDate(widget.record.createdAt),
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: AppTheme.black,
-                ),
-              ),
-            ],
-          ),
+          _buildInfoRow('状态', _buildStatusBadge(widget.record.status)),
           const SizedBox(height: 12),
           Row(
             children: [
-              Text(
-                '风险等级',
-                style: GoogleFonts.inter(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.2,
-                  color: AppTheme.stone400,
-                ),
-              ),
-              const SizedBox(width: 8),
-              _buildRiskBadge(widget.record.riskLevel),
-              const SizedBox(width: 16),
-              Text(
-                '风险分数',
-                style: GoogleFonts.inter(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.2,
-                  color: AppTheme.stone400,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '${widget.record.riskScore}',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: AppTheme.black,
-                ),
-              ),
-            ],
-          ),
-          if (widget.record.imagePath != null) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Text(
-                  '图片路径',
+              SizedBox(
+                width: 80,
+                child: Text(
+                  '创建时间',
                   style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.2,
                     color: AppTheme.stone400,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  _formatDate(widget.record.createdAt),
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: AppTheme.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildInfoRow('风险等级', _buildRiskBadge(widget.record.riskLevel)),
+          const SizedBox(height: 12),
+          _buildInfoRow('风险分数', Text(
+            '${widget.record.riskScore}',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: AppTheme.black,
+            ),
+          )),
+          if (widget.record.imagePath != null) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    '图片路径',
+                    style: GoogleFonts.inter(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
+                      color: AppTheme.stone400,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -177,6 +163,28 @@ class _AnalysisDetailScreenState extends ConsumerState<AnalysisDetailScreen> {
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, Widget value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.2,
+              color: AppTheme.stone400,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        value,
+      ],
     );
   }
 
@@ -206,6 +214,50 @@ class _AnalysisDetailScreenState extends ConsumerState<AnalysisDetailScreen> {
         backgroundColor = AppTheme.stone100;
         textColor = AppTheme.stone600;
         label = riskLevel;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.inter(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          color: textColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(String status) {
+    Color backgroundColor;
+    Color textColor;
+    String label;
+
+    switch (status.toLowerCase()) {
+      case 'success':
+        backgroundColor = AppTheme.greenLight;
+        textColor = AppTheme.stone500;
+        label = '成功';
+        break;
+      case 'error':
+        backgroundColor = AppTheme.redLight;
+        textColor = AppTheme.burntOrange;
+        label = '错误';
+        break;
+      case 'processing':
+        backgroundColor = AppTheme.orangeLight;
+        textColor = AppTheme.stone600;
+        label = '处理中';
+        break;
+      default:
+        backgroundColor = AppTheme.stone100;
+        textColor = AppTheme.stone600;
+        label = status;
     }
 
     return Container(

@@ -129,10 +129,30 @@ class HistoryList extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-                  Row(
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
                     children: [
+                      _buildStatusBadge(record.status),
                       _buildRiskBadge(record.riskLevel),
-                      const SizedBox(width: 8),
+                      Text(
+                        record.tone,
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: AppTheme.stone400,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        '${record.riskScore}分',
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: AppTheme.stone400,
+                        ),
+                      ),
                       Text(
                         _formatDate(record.createdAt),
                         style: GoogleFonts.inter(
@@ -183,8 +203,50 @@ class HistoryList extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(4),
+        color: backgroundColor
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.inter(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          color: textColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(String status) {
+    Color backgroundColor;
+    Color textColor;
+    String label;
+
+    switch (status.toLowerCase()) {
+      case 'success':
+        backgroundColor = AppTheme.greenLight;
+        textColor = AppTheme.stone500;
+        label = '成功';
+        break;
+      case 'error':
+        backgroundColor = AppTheme.redLight;
+        textColor = AppTheme.burntOrange;
+        label = '错误';
+        break;
+      case 'processing':
+        backgroundColor = AppTheme.orangeLight;
+        textColor = AppTheme.stone600;
+        label = '处理中';
+        break;
+      default:
+        backgroundColor = AppTheme.stone100;
+        textColor = AppTheme.stone600;
+        label = status;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: backgroundColor
       ),
       child: Text(
         label,

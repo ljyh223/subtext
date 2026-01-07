@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:subtext/data/models/subtext_analysis_response.dart';
+import 'package:subtext/core/utils/logger.dart';
 
 class AnalysisRecord {
   final int? id;
@@ -80,6 +81,10 @@ class AnalysisRecord {
   }
 
   SubtextAnalysisResponse toSubtextAnalysisResponse() {
+    Logger.d('AnalysisRecord', 'Converting to SubtextAnalysisResponse. Strategies JSON: $strategiesJson');
+    final strategies = _jsonToStrategies(strategiesJson);
+    Logger.d('AnalysisRecord', 'Parsed strategies count: ${strategies.length}');
+    
     return SubtextAnalysisResponse(
       status: status,
       meta: Meta(
@@ -91,21 +96,21 @@ class AnalysisRecord {
         tone: tone,
         psychProfile: psychProfile,
       ),
-      strategies: _jsonToStrategies(strategiesJson),
+      strategies: strategies,
       cotLogDump: cotLogDump ?? '',
     );
   }
 
   static String _strategiesToJson(List<Strategy> strategies) {
-    return strategies
+    final jsonList = strategies
         .map((s) => {
               'type': s.type,
               'content': s.content,
               'expected_response': s.expectedResponse,
               'use_case': s.useCase,
             })
-        .toList()
-        .toString();
+        .toList();
+    return jsonEncode(jsonList);
   }
 
   static List<Strategy> _jsonToStrategies(String jsonStr) {

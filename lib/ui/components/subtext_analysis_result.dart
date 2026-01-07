@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
+import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/subtext_analysis_response.dart';
 
 class SubtextAnalysisResult extends StatelessWidget {
@@ -10,10 +11,26 @@ class SubtextAnalysisResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Logger.d('SubtextAnalysisResult', 'Building analysis result. Strategies count: ${analysis.strategies.length}');
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Status
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            color: analysis.status == 'success' ? AppTheme.greenLight :
+                   AppTheme.redLight,
+            child: Text(
+              '状态: ${_getStatusText(analysis.status)}',
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: AppTheme.black,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           // Risk Status
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -140,8 +157,20 @@ class SubtextAnalysisResult extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 
-                for (int i = 0; i < analysis.strategies.length; i++)
-                  _buildStrategyCard(analysis.strategies[i], i + 1),
+                if (analysis.strategies.isEmpty)
+                  Text(
+                    '暂无策略',
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppTheme.stone400,
+                    ),
+                  )
+                else
+                  ...List.generate(analysis.strategies.length, (index) {
+                    Logger.d('SubtextAnalysisResult', 'Building strategy card $index: ${analysis.strategies[index].type}');
+                    return _buildStrategyCard(analysis.strategies[index], index + 1);
+                  }),
               ],
             ),
           ),
@@ -238,5 +267,18 @@ class SubtextAnalysisResult extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getStatusText(String status) {
+    switch (status.toLowerCase()) {
+      case 'success':
+        return '成功';
+      case 'error':
+        return '错误';
+      case 'processing':
+        return '处理中';
+      default:
+        return status;
+    }
   }
 }
