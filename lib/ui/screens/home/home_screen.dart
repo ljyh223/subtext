@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
+import 'package:subtext/core/utils/logger.dart';
+import 'package:subtext/data/models/analysis_record.dart';
+import 'package:subtext/data/services/database_service.dart';
 import 'package:subtext/providers/nav_provider.dart';
+import 'package:subtext/ui/components/history_list.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -16,23 +20,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   late String formattedDate;
   late DateTime currentDate;
   late Timer timer;
+  List<AnalysisRecord> _analysisRecords = [];
+  bool _isLoadingRecords = true;
 
   @override
   void initState() {
     super.initState();
-    // 获取当前时间并格式化
     updateCurrentDate();
-    // 每分钟更新一次时间
     timer = Timer.periodic(
       const Duration(minutes: 1),
       (Timer t) => updateCurrentDate(),
     );
+    _loadAnalysisRecords();
   }
 
   @override
   void dispose() {
     timer.cancel();
     super.dispose();
+  }
+
+  Future<void> _loadAnalysisRecords() async {
+    try {
+      final records = await DatabaseService().getAllAnalysisRecords();
+      if (mounted) {
+        setState(() {
+          _analysisRecords = records;
+          _isLoadingRecords = false;
+        });
+      }
+    } catch (e) {
+      Logger.e('HomeScreen', 'Error loading analysis records: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingRecords = false;
+        });
+      }
+    }
   }
 
   // 更新当前日期和时间
@@ -188,8 +212,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         // Social Battery Card
         _buildSocialBatteryCard(),
         const SizedBox(height: 32),
-        // Recent Insights
-        _buildRecentInsights(),
+        // Recent Insights / History List
+        _buildHistorySection(),
+      ],
+    );
+  }
+
+  Widget _buildHistorySection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '历史记录',
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.2,
+                color: AppTheme.stone400,
+              ),
+            ),
+            if (!_isLoadingRecords && _analysisRecords.isNotEmpty)
+              GestureDetector(
+                onTap: _loadAnalysisRecords,
+                child: Text(
+                  '刷新',
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.burntOrange,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        const Divider(color: AppTheme.black, thickness: 1),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 400,
+          child: _isLoadingRecords
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : HistoryList(
+                  records: _analysisRecords,
+                  onRefresh: _loadAnalysisRecords,
+                ),
+        ),
       ],
     );
   }
@@ -267,86 +339,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentInsights() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '最近洞察',
-          style: GoogleFonts.inter(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.2,
-            color: AppTheme.stone400,
-          ),
-        ),
-        const SizedBox(height: 8),
-        const Divider(color: AppTheme.black, thickness: 1),
-        const SizedBox(height: 16),
-        // Insight items
-        _buildInsightItem(1, '项目延期谈判', '防御性 | 被动'),
-        const SizedBox(height: 12),
-        _buildInsightItem(2, '团队反馈会议', '协作性 | 开放'),
-        const SizedBox(height: 12),
-        _buildInsightItem(3, '客户提案评审', '果断 | 清晰'),
-      ],
-    );
-  }
-
-  Widget _buildInsightItem(int index, String title, String tags) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.white,
-        border: Border.all(color: AppTheme.stone200, width: 1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: const BoxDecoration(color: AppTheme.stone100),
-            child: Center(
-              child: Text(
-                index.toString(),
-                style: GoogleFonts.playfairDisplay(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.stone400,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.black,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '检测到: $tags',
-                  style: GoogleFonts.inter(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    color: AppTheme.stone400,
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),

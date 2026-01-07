@@ -15,6 +15,9 @@ class AppTheme {
   static const Color stone50 = Color(0xFFFAFAF9);
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
+  static const Color redLight = Color(0xFFFEE2E2);
+  static const Color orangeLight = Color(0xFFFED7AA);
+  static const Color greenLight = Color(0xFFBBF7D0);
 
   // ThemeData
   static ThemeData get theme {

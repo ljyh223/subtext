@@ -378,17 +378,18 @@ class MeScreen extends ConsumerWidget {
         color: AppTheme.white,
         border: Border.all(color: AppTheme.stone200, width: 1),
       ),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 20, color: AppTheme.burntOrange),
-          const SizedBox(height: 8),
+          Icon(icon, size: 18, color: AppTheme.burntOrange),
+          const SizedBox(height: 6),
           Text(
             value,
             style: GoogleFonts.playfairDisplay(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w900,
               color: AppTheme.black,
             ),
@@ -397,12 +398,14 @@ class MeScreen extends ConsumerWidget {
           Text(
             label,
             style: GoogleFonts.inter(
-              fontSize: 10,
+              fontSize: 9,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.1,
               color: AppTheme.stone400,
             ),
             textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

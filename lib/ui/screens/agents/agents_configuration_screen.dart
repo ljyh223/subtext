@@ -105,65 +105,67 @@ class _AgentsConfigurationScreenState extends State<AgentsConfigurationScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              // Icon
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: iconBackgroundColor,
-                  shape: BoxShape.circle,
+          Expanded(
+            child: Row(
+              children: [
+                // Icon
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: iconBackgroundColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(child: Icon(icon, size: 20, color: iconColor)),
                 ),
-                child: Center(child: Icon(icon, size: 20, color: iconColor)),
-              ),
-              const SizedBox(width: 12),
-              // Text Content
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.black,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.2,
-                      color: AppTheme.stone400,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: 200,
-                    child: Text(
-                      description,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: AppTheme.stone600,
+                const SizedBox(width: 12),
+                // Text Content
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.black,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.2,
+                          color: AppTheme.stone400,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        description,
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: AppTheme.stone600,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 12),
           // Toggle Switch
           Switch(
             value: isActive,
             onChanged: onToggle,
-            activeThumbColor: AppTheme.black,
-            inactiveThumbColor: AppTheme.white,
-            inactiveTrackColor: AppTheme.stone300,
-            trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+            activeThumbColor: AppTheme.burntOrange,
+            activeTrackColor: AppTheme.burntOrange.withOpacity(0.5),
           ),
         ],
       ),

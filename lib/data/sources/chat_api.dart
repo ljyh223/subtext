@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/ai_response.dart';
 import 'package:subtext/data/models/chat_message.dart';
-import 'package:subtext/data/models/workflow.dart';
 
 class ChatApi {
   final Dio _dio;
@@ -128,9 +127,8 @@ class ChatApi {
                       'Received event: $currentEvent, data: $json',
                     );
 
-                    // 只处理与消息相关的事件
-                    if (currentEvent == 'conversation.message.delta' ||
-                        currentEvent == 'conversation.message.completed') {
+                    // 与Python SDK行为一致：只处理增量消息事件
+                    if (currentEvent == 'conversation.message.delta') {
                       // 检查JSON结构，特别是content字段的位置
                       Logger.d('ChatApi', 'JSON keys: ${json.keys.join(', ')}');
 
@@ -142,7 +140,11 @@ class ChatApi {
                       );
 
                       final aiResponse = AIResponse.fromJson(messageJson);
-                      sink.add(aiResponse);
+                      
+                      // 与Python SDK行为一致：只发送有非空content的响应
+                      if (aiResponse.content != null && aiResponse.content!.isNotEmpty) {
+                        sink.add(aiResponse);
+                      }
                     }
                   } catch (e) {
                     Logger.e('ChatApi', 'Error parsing AI response: $e');
@@ -183,11 +185,14 @@ class ChatApi {
                       'Received event: $currentEvent, data: $json',
                     );
 
-                    // 只处理与消息相关的事件
-                    if (currentEvent == 'conversation.message.delta' ||
-                        currentEvent == 'conversation.message.completed') {
+                    // 与Python SDK行为一致：只处理增量消息事件
+                    if (currentEvent == 'conversation.message.delta') {
                       final aiResponse = AIResponse.fromJson(json);
-                      sink.add(aiResponse);
+                      
+                      // 与Python SDK行为一致：只发送有非空content的响应
+                      if (aiResponse.content != null && aiResponse.content!.isNotEmpty) {
+                        sink.add(aiResponse);
+                      }
                     }
                   } catch (e) {
                     Logger.e('ChatApi', 'Error parsing AI response: $e');

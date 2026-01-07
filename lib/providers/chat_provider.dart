@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:core';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/ai_response.dart';
 import 'package:subtext/data/models/chat_message.dart';
+import 'package:subtext/data/models/subtext_analysis_response.dart';
 import 'package:subtext/data/repositories/chat_repository.dart';
 import 'package:subtext/data/sources/chat_api.dart';
 
@@ -26,12 +29,14 @@ class ChatState {
   final bool isLoading;
   final String? error;
   final Stream<AIResponse>? responseStream;
+  final SubtextAnalysisResponse? subtextAnalysis;
 
   const ChatState({
     this.messages = const [],
     this.isLoading = false,
     this.error,
     this.responseStream,
+    this.subtextAnalysis,
   });
 
   ChatState copyWith({
@@ -39,12 +44,14 @@ class ChatState {
     bool? isLoading,
     String? error,
     Stream<AIResponse>? responseStream,
+    SubtextAnalysisResponse? subtextAnalysis,
   }) {
     return ChatState(
       messages: messages ?? this.messages,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       responseStream: responseStream ?? this.responseStream,
+      subtextAnalysis: subtextAnalysis ?? this.subtextAnalysis,
     );
   }
 }
@@ -168,6 +175,17 @@ class ChatNotifier extends Notifier<ChatState> {
       onDone: () {
         // 流结束
         Logger.d('ChatNotifier', 'Stream done');
+        
+        // 检查并解析最后一条AI消息中的JSON内容
+        final aiMessages = state.messages
+            .where((msg) => msg.role == 'assistant')
+            .toList();
+        
+        if (aiMessages.isNotEmpty) {
+          final lastAiMessage = aiMessages.last;
+          parseJsonFromMessage(lastAiMessage.content);
+        }
+        
         state = state.copyWith(isLoading: false);
       },
     );
@@ -286,6 +304,17 @@ class ChatNotifier extends Notifier<ChatState> {
       onDone: () {
         // 流结束
         Logger.d('ChatNotifier', 'Stream done');
+        
+        // 检查并解析最后一条AI消息中的JSON内容
+        final aiMessages = state.messages
+            .where((msg) => msg.role == 'assistant')
+            .toList();
+        
+        if (aiMessages.isNotEmpty) {
+          final lastAiMessage = aiMessages.last;
+          parseJsonFromMessage(lastAiMessage.content);
+        }
+        
         state = state.copyWith(isLoading: false);
       },
     );
@@ -298,5 +327,32 @@ class ChatNotifier extends Notifier<ChatState> {
   void clearMessages() {
     _streamSubscription?.cancel();
     state = const ChatState();
+  }
+
+  /// 从消息中提取并解析JSON内容
+  void parseJsonFromMessage(String messageContent) {
+    try {
+      // 使用正则表达式匹配JSON内容
+      final jsonRegex = RegExp(r'```json\s*([\s\S]*?)\s*```');
+      final match = jsonRegex.firstMatch(messageContent);
+      
+      if (match != null) {
+        final jsonString = match.group(1)?.trim() ?? '';
+        
+        if (jsonString.isNotEmpty) {
+          // 解析JSON
+          final jsonData = jsonDecode(jsonString);
+          final subtextAnalysis = SubtextAnalysisResponse.fromJson(jsonData);
+          
+          // 更新状态
+          state = state.copyWith(subtextAnalysis: subtextAnalysis);
+          Logger.d('ChatNotifier', 'Successfully parsed JSON from message');
+        }
+      } else {
+        Logger.d('ChatNotifier', 'No JSON found in message content');
+      }
+    } catch (e) {
+      Logger.e('ChatNotifier', 'Error parsing JSON from message: $e');
+    }
   }
 }

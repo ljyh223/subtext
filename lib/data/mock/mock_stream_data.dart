@@ -1,0 +1,122 @@
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:subtext/core/utils/logger.dart';
+import 'package:subtext/data/models/subtext_analysis_response.dart';
+
+class MockStreamData {
+  static Future<String> getTestResponse() async {
+    try {
+      return await rootBundle.loadString('assets/mock_test_response.txt');
+    } catch (e) {
+      Logger.d("MockSteamData", "json error");
+      Logger.d("MockSteamData", e.toString());
+      return '''[LOG] System initialized. Input payload received.
+
+[LOG] Image validation passed. Format: JPEG. URL processing complete.
+
+[LOG] Invoking ChatRecord_Extractor module for OCR processing...
+
+[LOG] OCR processing complete. Detected 8 message units with 3 distinct participants.
+
+[LOG] Loading Psychology_Analysis v5.3 kernel...
+
+
+[LOG] Psychology analysis complete. Generating comprehensive psych profile with risk assessment.
+
+[LOG] Strategy synthesis module engaged. Generating three response strategies...
+
+
+[LOG] Strategy generation complete. 3 distinct response strategies synthesized.
+
+[LOG] Multi-modal fusion complete. Preparing data payload...
+
+
+[LOG] Workflow log integration complete. Output structure validated.
+
+[LOG] Transmission ready. Final checkpoint passed.
+```json
+{
+  "status": "success",
+  "meta": {
+    "risk_score": 89,
+    "risk_level": "Critical",
+    "core_intent": "要求Rachel收回'从来、肉眼可见'等全盘否定性指责，并承认对方在寝室公共卫生中也有过付出和贡献，以维护自尊和寻求公平认可"
+  },
+  "subtext_analysis": {
+    "tone": "被动攻击型混合防御型与对抗型",
+    "psych_profile": "对方（腿长一米八）在本次对话中表现出强烈的被动攻击型沟通风格，情绪处于高度激动、委屈、愤怒交织的负面状态。其深层需求是渴望自己的劳动付出得到承认，核心心理动机是因被公开贬低而感到自尊受损。真实意图是要求Rachel收回绝对化的指责并承认对方也有付出，同时明确卫生责任边界。防御机制上主要使用了投射性指责（将问题普遍化）和情感隔离（提出冷冰冰的责任划分方案）。关系动态评估显示双方信任基础已破裂，沟通完全陷入情绪对抗，短期内关系将严重恶化，趋于冷战或彻底分割。"
+  },
+  "strategies": [
+    {
+      "type": "The Pivot",
+      "content": "现在说这个都挺上头的，马上要上课/要忙了，晚上回来大家都冷静点再说吧。公共卫生本来就需要一起维护，具体怎么弄晚点再商量。",
+      "expected_response": "大概率能暂时中止争吵，对方激烈的情绪因找不到继续对撞的靶子而可能逐渐平息，为双方提供宝贵的冷静期",
+      "use_case": "当前高危对抗局面的首选策略，适用于需要立即给情绪降温、避免冲突升级的场景"
+    },
+    {
+      "type": "The Mirror",
+      "content": "讨论卫生可以，人身攻击和翻旧账没意思。我的观察是基于事实，你觉得不准确可以指出具体事例。至于打扫，既然大家想法不同，以后公共区域排班，个人区域自理，这样最清楚。",
+      "expected_response": "可能激化对方情绪导致更激烈反驳或沉默冷战，但清晰划定了'对事不对人'的沟通红线和解决方案，强行将对话从情绪层拉回事务层",
+      "use_case": "适用于已决心不再维护表面和平，需要立即停止情绪消耗并明确底线的场景"
+    },
+    {
+      "type": "The Joke",
+      "content": "'高贵'这词我可担不起，我这边是'乱室佳人'重灾区好吧。行了行了，知道你们也辛苦了，咱都别互相拷打了，这破卫生弄得跟宫斗似的，不如想想咋定个'互不侵犯卫生条约'。",
+      "expected_response": "有一定风险，若对方仍在气头上可能被视为嬉皮笑脸；但如果成功，能有效缓解紧张气氛，让对方感到意外从而放松防御",
+      "use_case": "适用于关系有一定基础，且双方都有台阶可下的情况，试图用幽默将对抗氛围转化为无奈的共情"
+    }
+  ],
+  "cot_log_dump": "聊天记录提取阶段：成功识别8条消息，涉及3位参与者，核心冲突为Rachel与腿长一米八关于寝室卫生责任的争议。心理侧写分析阶段：识别对方沟通风格为被动攻击型主导，混合防御与对抗特征；情绪状态分析显示对方处于高度激动、委屈、愤怒的负面峰值，深层需求是劳动付出被认可；真实意图深度剖析揭示对方核心诉求是要求收回全盘否定性指责并寻求公平认可；风险评估计算得89分，属于极高危级别，信任危机、沟通障碍、关系恶化风险均超过80分。策略生成阶段：基于对方'求认可、反指责'的心理，设计了三套策略：太极策略（首选）通过拖延战术给情绪降温；硬刚策略建立边界明确规则；幽默策略尝试化解敌意。工作流整合阶段：所有分析成果已整合为结构化数据包，验证通过。"
+}
+```''';
+    }
+  }
+
+  static Stream<String> createMockStream({Duration duration = const Duration(seconds: 5)}) async* {
+    final content = await getTestResponse();
+    final lines = content.split('\n');
+    final totalDuration = duration.inMilliseconds;
+    final delayPerLine = totalDuration / lines.length;
+
+    for (int i = 0; i < lines.length; i++) {
+      await Future.delayed(Duration(milliseconds: delayPerLine.round()));
+      yield lines[i];
+    }
+  }
+
+  static SubtextAnalysisResponse getMockAnalysis() {
+    return SubtextAnalysisResponse(
+      status: 'success',
+      meta: Meta(
+        riskScore: 89,
+        riskLevel: 'Critical',
+        coreIntent: "要求Rachel收回'从来、肉眼可见'等全盘否定性指责，并承认对方在寝室公共卫生中也有过付出和贡献，以维护自尊和寻求公平认可",
+      ),
+      subtextAnalysis: SubtextAnalysis(
+        tone: '被动攻击型混合防御型与对抗型',
+        psychProfile: '对方（腿长一米八）在本次对话中表现出强烈的被动攻击型沟通风格，情绪处于高度激动、委屈、愤怒交织的负面状态。其深层需求是渴望自己的劳动付出得到承认，核心心理动机是因被公开贬低而感到自尊受损。真实意图是要求Rachel收回绝对化的指责并承认对方也有付出，同时明确卫生责任边界。防御机制上主要使用了投射性指责（将问题普遍化）和情感隔离（提出冷冰冰的责任划分方案）。关系动态评估显示双方信任基础已破裂，沟通完全陷入情绪对抗，短期内关系将严重恶化，趋于冷战或彻底分割。',
+      ),
+      strategies: [
+        Strategy(
+          type: 'The Pivot',
+          content: '现在说这个都挺上头的，马上要上课/要忙了，晚上回来大家都冷静点再说吧。公共卫生本来就需要一起维护，具体怎么弄晚点再商量。',
+          expectedResponse: '大概率能暂时中止争吵，对方激烈的情绪因找不到继续对撞的靶子而可能逐渐平息，为双方提供宝贵的冷静期',
+          useCase: '当前高危对抗局面的首选策略，适用于需要立即给情绪降温、避免冲突升级的场景',
+        ),
+        Strategy(
+          type: 'The Mirror',
+          content: '讨论卫生可以，人身攻击和翻旧账没意思。我的观察是基于事实，你觉得不准确可以指出具体事例。至于打扫，既然大家想法不同，以后公共区域排班，个人区域自理，这样最清楚。',
+          expectedResponse: "可能激化对方情绪导致更激烈反驳或沉默冷战，但清晰划定了'对事不对人'的沟通红线和解决方案，强行将对话从情绪层拉回事务层",
+          useCase: '适用于已决心不再维护表面和平，需要立即停止情绪消耗并明确底线的场景',
+        ),
+        Strategy(
+          type: 'The Joke',
+          content: "'高贵'这词我可担不起，我这边是'乱室佳人'重灾区好吧。行了行了，知道你们也辛苦了，咱都别互相拷打了，这破卫生弄得跟宫斗似的，不如想想咋定个'互不侵犯卫生条约'。",
+          expectedResponse: '有一定风险，若对方仍在气头上可能被视为嬉皮笑脸；但如果成功，能有效缓解紧张气氛，让对方感到意外从而放松防御',
+          useCase: '适用于关系有一定基础，且双方都有台阶可下的情况，试图用幽默将对抗氛围转化为无奈的共情',
+        ),
+      ],
+      cotLogDump: "聊天记录提取阶段：成功识别8条消息，涉及3位参与者，核心冲突为Rachel与腿长一米八关于寝室卫生责任的争议。心理侧写分析阶段：识别对方沟通风格为被动攻击型主导，混合防御与对抗特征；情绪状态分析显示对方处于高度激动、委屈、愤怒的负面峰值，深层需求是劳动付出被认可；真实意图深度剖析揭示对方核心诉求是要求收回全盘否定性指责并寻求公平认可；风险评估计算得89分，属于极高危级别，信任危机、沟通障碍、关系恶化风险均超过80分。策略生成阶段：基于对方'求认可、反指责'的心理，设计了三套策略：太极策略（首选）通过拖延战术给情绪降温；硬刚策略建立边界明确规则；幽默策略尝试化解敌意。工作流整合阶段：所有分析成果已整合为结构化数据包，验证通过。",
+    );
+  }
+}

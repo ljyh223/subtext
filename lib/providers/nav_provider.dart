@@ -11,12 +11,14 @@ class AppState {
   final HomeView homeView;
   final AnalysisState analysisState;
   final bool showSidePanel;
+  final bool showSim;
 
   AppState({
     this.currentTab = AppTab.home,
     this.homeView = HomeView.overview,
     this.analysisState = AnalysisState.empty,
     this.showSidePanel = false,
+    this.showSim = false,
   });
 
   AppState copyWith({
@@ -24,12 +26,14 @@ class AppState {
     HomeView? homeView,
     AnalysisState? analysisState,
     bool? showSidePanel,
+    bool? showSim,
   }) {
     return AppState(
       currentTab: currentTab ?? this.currentTab,
       homeView: homeView ?? this.homeView,
       analysisState: analysisState ?? this.analysisState,
       showSidePanel: showSidePanel ?? this.showSidePanel,
+      showSim: showSim ?? this.showSim,
     );
   }
 }
@@ -58,6 +62,10 @@ class AppStateNotifier extends Notifier<AppState> {
 
   void toggleSidePanel() {
     state = state.copyWith(showSidePanel: !state.showSidePanel);
+  }
+
+  void toggleShowSim() {
+    state = state.copyWith(showSim: !state.showSim);
   }
 
   void startAnalysis() {

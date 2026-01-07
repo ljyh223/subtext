@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,8 +8,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:subtext/core/theme/app_theme.dart';
 import 'package:subtext/core/utils/logger.dart';
 import 'package:subtext/data/models/file_upload_response.dart';
-import 'package:subtext/providers/app_state_provider.dart';
+import 'package:subtext/data/models/subtext_analysis_response.dart';
+import 'package:subtext/data/models/ai_response.dart';
+import 'package:subtext/data/mock/mock_stream_data.dart';
+import 'package:subtext/data/services/database_service.dart';
+import 'package:subtext/providers/nav_provider.dart';
 import 'package:subtext/providers/chat_provider.dart';
+import 'package:subtext/ui/components/subtext_analysis_result.dart';
 
 class ScannerScreen extends ConsumerStatefulWidget {
   const ScannerScreen({super.key});
@@ -23,7 +29,16 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   String _analysisResult = '';
   bool _isUploading = false;
   bool _isAnalyzing = false;
+  final bool _useMockData = true;
+  SubtextAnalysisResponse? _subtextAnalysis;
   final ImagePicker _picker = ImagePicker();
+  final TextEditingController _replyController = TextEditingController();
+
+  @override
+  void dispose() {
+    _replyController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +223,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                     ),
                   ),
                 const SizedBox(height: 16),
-                if (_analysisResult.isNotEmpty)
+                if (_analysisResult.isNotEmpty && _subtextAnalysis == null)
                   Text(
                     _analysisResult,
                     style: GoogleFonts.inter(
@@ -217,6 +232,8 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                       color: AppTheme.stone400,
                     ),
                   ),
+                if (_subtextAnalysis != null)
+                  SubtextAnalysisResult(analysis: _subtextAnalysis!),
                 const SizedBox(height: 24),
                 // Action Buttons
                 Row(
@@ -281,7 +298,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                if (_analysisResult.isNotEmpty)
+                if (_subtextAnalysis != null && _subtextAnalysis!.strategies.isNotEmpty)
                   // Strategy Card
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -303,7 +320,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '"关于时间节点，我们需要在周三前敲定，否则会影响Q4的整体排期。"',
+                          '"${_subtextAnalysis!.strategies.first.content}"',
                           style: GoogleFonts.playfairDisplay(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -351,6 +368,12 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
 
   Widget _buildSimulationModal(BuildContext context) {
     final appStateNotifier = ref.read(appStateProvider.notifier);
+    
+    if (_subtextAnalysis == null || _subtextAnalysis!.strategies.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final strategy = _subtextAnalysis!.strategies.first;
 
     return GestureDetector(
       onTap: () => appStateNotifier.toggleShowSim(),
@@ -387,7 +410,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '模拟模式',
+                            '模拟模式 - ${strategy.type}',
                             style: GoogleFonts.inter(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,
@@ -471,7 +494,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                                     ),
                                   ),
                                   child: Text(
-                                    '关于时间节点，我们需要在周三前敲定...',
+                                    strategy.content,
                                     style: GoogleFonts.inter(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
@@ -498,14 +521,14 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                                   horizontal: 8,
                                   vertical: 4,
                                 ),
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 243, 232),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.orangeLight,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(12),
                                   ),
                                 ),
                                 child: Text(
-                                  'AI: 压迫感过强，对方可能产生抵触',
+                                  'AI: ${strategy.expectedResponse}',
                                   style: GoogleFonts.inter(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w700,
@@ -536,16 +559,22 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
                           ),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              '输入您的回复进行练习...',
-                              style: TextStyle(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: TextField(
+                            controller: _replyController,
+                            decoration: InputDecoration(
+                              hintText: '输入您的回复进行练习...',
+                              hintStyle: TextStyle(
                                 fontSize: 12,
                                 color: AppTheme.stone400,
                               ),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppTheme.black,
                             ),
                           ),
                         ),
@@ -578,27 +607,35 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
     setState(() {
       _isUploading = true;
       _analysisResult = '';
+      _subtextAnalysis = null;
     });
 
     try {
-      // 1. Upload Image
-      final chatRepository = ref.read(chatRepositoryProvider);
-      _uploadResponse = await chatRepository.uploadFile(
-        filePath: _selectedImage!.path,
-        fileName: _selectedImage!.path.split('/').last,
-      );
+      if (_useMockData) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        setState(() {
+          _isUploading = false;
+          _isAnalyzing = true;
+        });
+        await _sendMockAnalysis();
+      } else {
+        final chatRepository = ref.read(chatRepositoryProvider);
+        _uploadResponse = await chatRepository.uploadFile(
+          filePath: _selectedImage!.path,
+          fileName: _selectedImage!.path.split('/').last,
+        );
 
-      if (_uploadResponse?.code != 0 || _uploadResponse?.data == null) {
-        throw Exception('Image upload failed: ${_uploadResponse?.msg}');
+        if (_uploadResponse?.code != 0 || _uploadResponse?.data == null) {
+          throw Exception('Image upload failed: ${_uploadResponse?.msg}');
+        }
+
+        setState(() {
+          _isUploading = false;
+          _isAnalyzing = true;
+        });
+
+        await _sendMultimodalMessage(_uploadResponse!.data!.id);
       }
-
-      setState(() {
-        _isUploading = false;
-        _isAnalyzing = true;
-      });
-
-      // 2. Send Multimodal Message
-      await _sendMultimodalMessage(_uploadResponse!.data!.id);
     } catch (e) {
       setState(() {
         _isUploading = false;
@@ -611,7 +648,6 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   Future<void> _sendMultimodalMessage(String fileId) async {
     final chatRepository = ref.read(chatRepositoryProvider);
 
-    // 使用新的sendImageMessage方法发送图片消息
     final stream = chatRepository.sendImageMessage(
       botId: '7590746062667972648',
       userId: '123456',
@@ -619,10 +655,47 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
       stream: true,
     );
 
-    // 订阅流，实时更新UI
+    await _processAIResponseStream(stream);
+  }
+
+  Future<void> _sendMockAnalysis() async {
+    final stream = MockStreamData.createMockStream(
+      duration: const Duration(seconds: 5),
+    );
+
+    await _processStringStream(stream);
+  }
+
+  Future<void> _processStringStream(Stream<String> stream) async {
     String fullResponse = '';
 
-    // 监听流事件，实时更新UI
+    stream.listen(
+      (content) {
+        fullResponse += content;
+        setState(() {
+          _analysisResult = fullResponse;
+        });
+      },
+      onError: (error) {
+        Logger.e('ScannerScreen', 'Stream error: $error');
+        setState(() {
+          _analysisResult = 'Error: $error';
+          _isAnalyzing = false;
+        });
+      },
+      onDone: () {
+        Logger.d('ScannerScreen', 'Stream done');
+        setState(() {
+          _isAnalyzing = false;
+        });
+        _parseJsonFromMessage(fullResponse);
+      },
+    );
+  }
+
+  Future<void> _processAIResponseStream(Stream<AIResponse> stream) async {
+    String fullResponse = '';
+
     stream.listen(
       (response) {
         if (response.content != null) {
@@ -644,8 +717,56 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
         setState(() {
           _isAnalyzing = false;
         });
+        _parseJsonFromMessage(fullResponse);
       },
     );
+  }
+
+  void _parseJsonFromMessage(String messageContent) {
+    try {
+      Logger.d('ScannerScreen', 'Starting JSON parsing. Message length: ${messageContent.length}');
+      final jsonRegex = RegExp(r'```json\s*([\s\S]*?)\s*```');
+      final match = jsonRegex.firstMatch(messageContent);
+      
+      Logger.d('ScannerScreen', 'JSON match result: $match');
+      
+      if (match != null) {
+        final jsonString = match.group(1)?.trim() ?? '';
+        Logger.d('ScannerScreen', 'Extracted JSON string length: ${jsonString.length}');
+        
+        if (jsonString.isNotEmpty) {
+          final jsonData = jsonDecode(jsonString);
+          Logger.d('ScannerScreen', 'Decoded JSON: $jsonData');
+          final subtextAnalysis = SubtextAnalysisResponse.fromJson(jsonData);
+          
+          setState(() {
+            _subtextAnalysis = subtextAnalysis;
+            _analysisResult = messageContent;
+          });
+          Logger.d('ScannerScreen', 'Successfully parsed JSON and set subtextAnalysis');
+          
+          _saveAnalysisToDatabase(subtextAnalysis);
+        }
+      } else {
+        Logger.d('ScannerScreen', 'No JSON found in message content');
+      }
+    } catch (e) {
+      Logger.e('ScannerScreen', 'Error parsing JSON from message: $e');
+      Logger.e('ScannerScreen', 'Message content: $messageContent');
+    }
+  }
+
+  Future<void> _saveAnalysisToDatabase(SubtextAnalysisResponse analysis) async {
+    try {
+      final imagePath = _selectedImage?.path;
+      await DatabaseService().insertAnalysisFromResponse(
+        analysis,
+        imagePath: imagePath,
+      );
+      Logger.d('ScannerScreen', 'Analysis saved to database successfully');
+    } catch (e) {
+      Logger.e('ScannerScreen', 'Error saving analysis to database: $e');
+    }
   }
 
   void _resetAnalysis() {
