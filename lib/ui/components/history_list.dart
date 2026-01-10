@@ -93,22 +93,25 @@ class HistoryList extends ConsumerWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.white,
-          border: Border.all(color: AppTheme.stone200, width: 1),
+          color: AppTheme.bluePrimary,
+          border: Border.all(color: AppTheme.bluePrimary, width: 1),
         ),
         child: Row(
           children: [
             Container(
               width: 48,
               height: 48,
-              decoration: const BoxDecoration(color: AppTheme.stone100),
+              decoration: BoxDecoration(
+                color: AppTheme.greenPrimary,
+                border: Border.all(color: AppTheme.greenDark, width: 1),
+              ),
               child: Center(
                 child: Text(
                   index.toString(),
                   style: GoogleFonts.playfairDisplay(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppTheme.stone400,
+                    color: AppTheme.white,
                   ),
                 ),
               ),
@@ -123,7 +126,7 @@ class HistoryList extends ConsumerWidget {
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: AppTheme.black,
+                      color: AppTheme.white,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -140,7 +143,7 @@ class HistoryList extends ConsumerWidget {
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
-                          color: AppTheme.stone400,
+                          color: AppTheme.blueLight,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -150,7 +153,7 @@ class HistoryList extends ConsumerWidget {
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
-                          color: AppTheme.stone400,
+                          color: AppTheme.blueLight,
                         ),
                       ),
                       Text(
@@ -158,7 +161,7 @@ class HistoryList extends ConsumerWidget {
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
-                          color: AppTheme.stone400,
+                          color: AppTheme.blueLight,
                         ),
                       ),
                     ],
@@ -180,30 +183,31 @@ class HistoryList extends ConsumerWidget {
     switch (riskLevel.toLowerCase()) {
       case 'critical':
       case 'high':
-        backgroundColor = AppTheme.redLight;
-        textColor = AppTheme.burntOrange;
+        backgroundColor = AppTheme.white;
+        textColor = AppTheme.bluePrimary;
         label = '高风险';
         break;
       case 'medium':
-        backgroundColor = AppTheme.orangeLight;
-        textColor = AppTheme.stone600;
+        backgroundColor = AppTheme.white;
+        textColor = AppTheme.bluePrimary;
         label = '中风险';
         break;
       case 'low':
-        backgroundColor = AppTheme.greenLight;
-        textColor = AppTheme.stone500;
+        backgroundColor = AppTheme.greenPrimary;
+        textColor = AppTheme.white;
         label = '低风险';
         break;
       default:
-        backgroundColor = AppTheme.stone100;
-        textColor = AppTheme.stone600;
+        backgroundColor = AppTheme.white;
+        textColor = AppTheme.bluePrimary;
         label = riskLevel;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: backgroundColor
+        color: backgroundColor,
+        border: Border.all(color: AppTheme.greenPrimary, width: 1),
       ),
       child: Text(
         label,
@@ -223,30 +227,31 @@ class HistoryList extends ConsumerWidget {
 
     switch (status.toLowerCase()) {
       case 'success':
-        backgroundColor = AppTheme.greenLight;
-        textColor = AppTheme.stone500;
+        backgroundColor = AppTheme.greenPrimary;
+        textColor = AppTheme.white;
         label = '成功';
         break;
       case 'error':
-        backgroundColor = AppTheme.redLight;
-        textColor = AppTheme.burntOrange;
+        backgroundColor = AppTheme.white;
+        textColor = AppTheme.bluePrimary;
         label = '错误';
         break;
       case 'processing':
-        backgroundColor = AppTheme.orangeLight;
-        textColor = AppTheme.stone600;
+        backgroundColor = AppTheme.white;
+        textColor = AppTheme.bluePrimary;
         label = '处理中';
         break;
       default:
-        backgroundColor = AppTheme.stone100;
-        textColor = AppTheme.stone600;
+        backgroundColor = AppTheme.white;
+        textColor = AppTheme.bluePrimary;
         label = status;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: backgroundColor
+        color: backgroundColor,
+        border: Border.all(color: AppTheme.greenPrimary, width: 1),
       ),
       child: Text(
         label,

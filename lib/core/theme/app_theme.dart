@@ -18,6 +18,11 @@ class AppTheme {
   static const Color redLight = Color(0xFFFEE2E2);
   static const Color orangeLight = Color(0xFFFED7AA);
   static const Color greenLight = Color(0xFFBBF7D0);
+  // New colors for history items
+  static const Color bluePrimary = Color(0xFF3B82F6);
+  static const Color blueLight = Color(0xFFDBEAFE);
+  static const Color greenPrimary = Color(0xFF10B981);
+  static const Color greenDark = Color(0xFF059669);
 
   // ThemeData
   static ThemeData get theme {
